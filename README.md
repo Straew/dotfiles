@@ -7,10 +7,31 @@ cd ~/.dotfiles
 chmod +x install.sh
 ./install.sh
 ```
+### Dependencies
+```bash
+yay -S hyprland 
+yay -S xdg-desktop-portal-hyprland  
+yay -S xdg-desktop-portal-gtk       
+yay -S qt5-wayland qt6-wayland      
 
+yay -S waybar           
+yay -S dunst          
+
+yay -S kitty 
+yay -S rofi
+yay -S swww  
+yay -S matugen
+yay -S grim
+yay -S thunar
+yay -S playerctl 
+yay -S pipewire  
+yay -S mangohud 
+
+yay -S ttf-jetbrains-mono-nerd
+```
 #To Uninstall js run the unistall.sh instead of the install.sh script 
 if there are any issues with the installation js install zip extract it open in the terminal and run chmod and install.sh it should work
- 
+
 ### Post Installation 
 -> To use the wallpapers you need to add it to "~/Pictures/Wallpapers" 
  
