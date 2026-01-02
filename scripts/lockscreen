@@ -1,0 +1,179 @@
+#!/bin/bash
+
+CONFIG_FILE="$HOME/.config/lockscreen/config.conf"
+DEFAULT_WALLPAPER="$HOME/Pictures/Wallpapers/lockscreen.png"
+
+# Create config directory if it doesn't exist
+mkdir -p "$(dirname "$CONFIG_FILE")"
+
+# Create default config if it doesn't exist
+if [ ! -f "$CONFIG_FILE" ]; then
+    cat > "$CONFIG_FILE" << 'EOF'
+# Lockscreen Configuration
+
+# Lockscreen program to use: hyprlock or swaylock
+LOCK_PROGRAM="hyprlock"
+
+# Wallpaper for lockscreen (leave empty to use current wallpaper)
+LOCK_WALLPAPER=""
+
+# Swaylock specific options
+SWAYLOCK_BLUR="7x5"
+SWAYLOCK_EFFECT_VIGNETTE="0.5:0.5"
+SWAYLOCK_FADE_IN="0.2"
+SWAYLOCK_CLOCK="true"
+SWAYLOCK_INDICATOR="true"
+
+# Auto-generate hyprlock config from wallpaper
+AUTO_GENERATE_HYPRLOCK="true"
+EOF
+    echo "Created default config at $CONFIG_FILE"
+fi
+
+# Source the config file
+source "$CONFIG_FILE"
+
+# Determine wallpaper to use
+if [ -n "$LOCK_WALLPAPER" ] && [ -f "$LOCK_WALLPAPER" ]; then
+    wallpaper="$LOCK_WALLPAPER"
+elif [ -f "$DEFAULT_WALLPAPER" ]; then
+    wallpaper="$DEFAULT_WALLPAPER"
+else
+    # Try to get current wallpaper from swww
+    wallpaper=$(swww query | grep -oP 'image: \K.*' | head -n1)
+    if [ -z "$wallpaper" ] || [ ! -f "$wallpaper" ]; then
+        echo "Warning: No wallpaper found, using solid color"
+        wallpaper=""
+    fi
+fi
+
+# Function to generate hyprlock config
+generate_hyprlock_config() {
+    local hyprlock_conf="$HOME/.config/hypr/hyprlock.conf"
+    
+    cat > "$hyprlock_conf" << EOF
+background {
+    monitor =
+    path = $wallpaper
+    blur_passes = 3
+    contrast = 0.8916
+    brightness = 0.8172
+    vibrancy = 0.1696
+    vibrancy_darkness = 0.0
+}
+
+input-field {
+    monitor =
+    size = 250, 60
+    outline_thickness = 2
+    dots_size = 0.2
+    dots_spacing = 0.2
+    dots_center = true
+    outer_color = rgba(0, 0, 0, 0)
+    inner_color = rgba(0, 0, 0, 0.5)
+    font_color = rgb(200, 200, 200)
+    fade_on_empty = false
+    placeholder_text = <i><span foreground="##cdd6f4">Password...</span></i>
+    hide_input = false
+    position = 0, -120
+    halign = center
+    valign = center
+}
+
+label {
+    monitor =
+    text = Hi there, \$USER
+    color = rgba(200, 200, 200, 1.0)
+    font_size = 25
+    font_family = Noto Sans
+    position = 0, -40
+    halign = center
+    valign = top
+}
+
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(date +"%A, %B %d")"
+    color = rgba(200, 200, 200, 1.0)
+    font_size = 18
+    font_family = Noto Sans
+    position = 0, -200
+    halign = center
+    valign = top
+}
+
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(date +"%H:%M")"
+    color = rgba(200, 200, 200, 1.0)
+    font_size = 50
+    font_family = Noto Sans Bold
+    position = 0, -250
+    halign = center
+    valign = top
+}
+EOF
+    echo "Generated hyprlock config at $hyprlock_conf"
+}
+
+# Lock based on selected program
+case "$LOCK_PROGRAM" in
+    hyprlock)
+        if [ "$AUTO_GENERATE_HYPRLOCK" = "true" ]; then
+            generate_hyprlock_config
+        fi
+        
+        # Check if hyprlock is installed
+        if ! command -v hyprlock &> /dev/null; then
+            echo "Error: hyprlock is not installed"
+            exit 1
+        fi
+        
+        hyprlock
+        ;;
+        
+    swaylock)
+        # Check if swaylock is installed
+        if ! command -v swaylock &> /dev/null; then
+            echo "Error: swaylock is not installed"
+            exit 1
+        fi
+        
+        # Build swaylock command
+        cmd="swaylock -f"
+        
+        if [ -n "$wallpaper" ]; then
+            cmd="$cmd -i $wallpaper"
+        else
+            cmd="$cmd -c 000000"
+        fi
+        
+        if [ "$SWAYLOCK_CLOCK" = "true" ]; then
+            cmd="$cmd --clock"
+        fi
+        
+        if [ "$SWAYLOCK_INDICATOR" = "true" ]; then
+            cmd="$cmd --indicator"
+        fi
+        
+        if [ -n "$SWAYLOCK_BLUR" ]; then
+            cmd="$cmd --effect-blur $SWAYLOCK_BLUR"
+        fi
+        
+        if [ -n "$SWAYLOCK_EFFECT_VIGNETTE" ]; then
+            cmd="$cmd --effect-vignette $SWAYLOCK_EFFECT_VIGNETTE"
+        fi
+        
+        if [ -n "$SWAYLOCK_FADE_IN" ]; then
+            cmd="$cmd --fade-in $SWAYLOCK_FADE_IN"
+        fi
+        
+        eval $cmd
+        ;;
+        
+    *)
+        echo "Error: Unknown lock program '$LOCK_PROGRAM'"
+        echo "Valid options: hyprlock, swaylock"
+        exit 1
+        ;;
+esac

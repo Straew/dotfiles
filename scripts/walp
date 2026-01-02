@@ -1,0 +1,153 @@
+#!/bin/bash
+# Enhanced walp script with better features
+# Save as ~/.local/bin/walp (replace your existing one)
+
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+STATE_FILE="$HOME/.config/wallpaper_state"
+CURRENT_WALL_FILE="$HOME/.cache/current_wallpaper"
+
+# Function to show usage
+show_usage() {
+    echo "Usage: walp [next|prev|random|path]"
+    echo ""
+    echo "Options:"
+    echo "  next     - Next wallpaper (default)"
+    echo "  prev     - Previous wallpaper"
+    echo "  random   - Random wallpaper"
+    echo "  <path>   - Set specific wallpaper"
+    echo ""
+    echo "Examples:"
+    echo "  walp              # Next wallpaper"
+    echo "  walp random       # Random wallpaper"
+    echo "  walp prev         # Previous wallpaper"
+    echo "  walp ~/Pictures/Wallpapers/cool.jpg"
+}
+
+# Get sorted list of wallpapers
+get_wallpapers() {
+    find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | sort
+}
+
+# Read current index
+get_current_index() {
+    if [ -f "$STATE_FILE" ]; then
+        cat "$STATE_FILE"
+    else
+        echo "0"
+    fi
+}
+
+# Save index
+save_index() {
+    echo "$1" > "$STATE_FILE"
+}
+
+# Apply wallpaper
+apply_wallpaper() {
+    local img="$1"
+    
+    # Check if image exists
+    if [ ! -f "$img" ]; then
+        echo "❌ Error: Image file not found: $img"
+        exit 1
+    fi
+    
+    echo "🎨 Setting wallpaper: $(basename "$img")"
+    
+    # Start swww daemon if not running
+    if ! pgrep -x swww-daemon > /dev/null; then
+        echo "  → Starting swww daemon..."
+        swww-daemon &
+        sleep 1
+    fi
+    
+    # Set wallpaper with swww (using your config from swww config.toml)
+    swww img "$img" --transition-type center --transition-fps 60 --transition-step 60 --transition-duration 5
+    
+    # Generate colors with matugen
+    echo "  → Generating color scheme..."
+    matugen image "$img"
+    
+    # Save current wallpaper path
+    echo "$img" > "$CURRENT_WALL_FILE"
+    
+    # Optional: Send notification
+    if command -v notify-send &> /dev/null; then
+        notify-send -t 3000 "🎨 Wallpaper Change?!" "$(basename "$img")"
+    fi
+    
+    echo "✅ Wallpaper set successfully!"
+}
+
+# Main logic
+main() {
+    # Create wallpaper directory if it doesn't exist
+    mkdir -p "$WALLPAPER_DIR"
+    
+    # Get wallpaper list
+    mapfile -t wallpapers < <(get_wallpapers)
+    total=${#wallpapers[@]}
+    
+    if [ "$total" -eq 0 ]; then
+        echo "❌ Error: No wallpapers found in $WALLPAPER_DIR"
+        exit 1
+    fi
+    
+    # Parse command
+    case "${1:-next}" in
+        next|"")
+            # Next wallpaper (original behavior)
+            current_index=$(get_current_index)
+            img="${wallpapers[$current_index]}"
+            next_index=$(( (current_index + 1) % total ))
+            save_index "$next_index"
+            echo "📸 Wallpaper $((current_index + 1)) of $total"
+            ;;
+            
+        prev)
+            # Previous wallpaper
+            current_index=$(get_current_index)
+            prev_index=$(( (current_index - 1 + total) % total ))
+            img="${wallpapers[$prev_index]}"
+            save_index "$prev_index"
+            echo "📸 Wallpaper $((prev_index + 1)) of $total"
+            ;;
+            
+        random)
+            # Random wallpaper
+            random_index=$((RANDOM % total))
+            img="${wallpapers[$random_index]}"
+            save_index "$random_index"
+            echo "📸 Random wallpaper: $((random_index + 1)) of $total"
+            ;;
+            
+        -h|--help)
+            show_usage
+            exit 0
+            ;;
+            
+        *)
+            # Specific file path provided
+            if [ -f "$1" ]; then
+                img="$1"
+                # Try to find index of this wallpaper in array
+                for i in "${!wallpapers[@]}"; do
+                    if [ "${wallpapers[$i]}" = "$img" ]; then
+                        save_index "$i"
+                        break
+                    fi
+                done
+            else
+                echo "❌ Error: File not found: $1"
+                echo ""
+                show_usage
+                exit 1
+            fi
+            ;;
+    esac
+    
+    # Apply the wallpaper
+    apply_wallpaper "$img"
+}
+
+main "$@"

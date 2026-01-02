@@ -1,0 +1,18 @@
+#!/bin/bash
+# Toggle gamemode optimizations
+
+if pgrep -x "gamemode" > /dev/null; then
+    # Turn off gamemode
+    pkill gamemode
+    hyprctl keyword decoration:blur:enabled true
+    hyprctl keyword decoration:active_opacity 0.95
+    hyprctl keyword animations:enabled true
+    notify-send "🎮 GameMode OFF" "Normal desktop mode"
+else
+    # Turn on gamemode - disable effects for performance
+    gamemode &
+    hyprctl keyword decoration:blur:enabled false
+    hyprctl keyword decoration:active_opacity 1.0
+    hyprctl keyword animations:enabled false
+    notify-send "🎮 GameMode ON" "Performance optimizations active"
+fi

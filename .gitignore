@@ -1,0 +1,11 @@
+hypr/colors.conf
+waybar/colors.css
+kitty/colors.conf
+rofi/colors.rasi
+.cache/
+*.log
+wallpaper_state
+
+# Backup files
+*.backup
+*~

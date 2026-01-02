@@ -1,0 +1,22 @@
+{
+    "mpris": {
+        "format": "{player_icon} {dynamic}",
+        "format-paused": "{status_icon} <i>{dynamic}</i>",
+        "player-icons": {
+            "default": "󰎆",
+            "spotify": "󰎆",
+            "Brave": "🌎"
+        },
+        "status-icons": {
+            "paused": ""
+        },
+        "dynamic-order": [
+            "title",
+            "artist"
+        ],
+        "dynamic-len": 40,
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl next",
+        "on-scroll-down": "playerctl previous"
+    }
+}

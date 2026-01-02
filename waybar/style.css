@@ -1,0 +1,166 @@
+@import "colors.css";
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 0;
+}
+#window {
+    background: alpha(@surface_bright, 0.2);
+    color: @shadow;
+    font-weight: bold;
+    font-style: italic;
+    padding: 4px 16px;
+}
+
+window#waybar {
+    background: transparent;
+}
+#waybar {
+    background-color: alpha(@background, 0.75);
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    border: 10px;
+}
+
+tooltip {
+    background: alpha(@background, 0.9);
+    border: 2px solid @primary;
+    border-radius: 8px;
+    padding: 8px;
+    color: @foreground;
+}
+
+tooltip label {
+    color: @foreground;
+}
+
+#workspaces {
+    padding: 0 4px;
+    background: transparent;
+}
+
+/* Inactive workspaces - subtle/transparent */
+#workspaces button {
+    padding: 4px 10px;
+    margin: 0px 2px;
+    border-radius: 6px;
+    background:  alpha(@surface_dim, 0.5);
+    color: @foreground;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+/* Active workspace - darker shade */
+#workspaces button.active {
+    background: rgba(255,255,255,0.5);
+    color: @on_primary;
+}
+
+#workspaces button.urgent {
+    background: @error;
+    color: @on_error;
+}
+/* Optional: slight hover effect */
+#workspaces button:hover {
+    background: alpha(@primary, 0.4);
+    color: @foreground;
+}
+
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#mpris,
+#tray
+{
+    padding: 0px 10px;
+    margin: 0px 2px;
+    border-radius: 0px;
+    background: alpha(@primary, 0.3);
+    background-color: transparent;
+    color: @foreground;
+}
+#clock {
+    background: alpha(@primary, 0.25);
+    color: @foreground;
+    font-weight: bold;
+    padding: 0px 10px;
+    border-radius: 100px;
+}
+
+#battery {
+    background: alpha(@color2, 0.2);
+}
+
+#battery.charging {
+    background: alpha(@color10, 0.3);
+}
+
+#battery.warning:not(.charging) {
+    background: alpha(@color3, 0.3);
+    color: @foreground;
+}
+
+#battery.critical:not(.charging) {
+    background: alpha(@error, 0.4);
+    color: @on_error;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+#network {
+    background: alpha(@color4, 0.2);
+}
+
+#network.disconnected {
+    background: alpha(@error, 0.3);
+    color: @on_error;
+}
+
+#pulseaudio {
+    background: alpha(@color6, 0.2);
+}
+
+#pulseaudio.muted {
+    background: alpha(@error, 0.3);
+    color: @on_error;
+}
+#mpris {
+    background: alpha(@color5, 0.2);
+    padding: 4px 14px;
+}
+
+#mpris.paused {
+    background: alpha(@surface_dim, 0.5);
+    font-style: italic;
+}
+#tray {
+    background: alpha(@surface, 0.5);
+    padding: 4px 8px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @error;
+}
+
+#network:hover,
+#pulseaudio:hover,
+#battery:hover,
+#backlight:hover,
+#clock:hover {
+  color: blueviolet;
+}

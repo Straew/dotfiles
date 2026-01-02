@@ -1,0 +1,18 @@
+{
+    "network": {
+        "interface": "wlan0",
+        "format-wifi": "{icon} {signalStrength}%",
+        "format-ethernet": "󰊗 {bandwidthDownBytes}",
+        "format-disconnected": "󰖪 ",
+        "format-icons": [
+            "󰤯",
+            "󰤟",
+            "󰤢",
+            "󰤥",
+            "󰤨"
+        ],
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n󰇚 {bandwidthDownBytes}  󰕒 {bandwidthUpBytes}",
+        "interval": 5,
+        "on-click": "nm-connection-editor"
+    }
+}

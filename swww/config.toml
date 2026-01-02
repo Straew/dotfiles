@@ -1,0 +1,13 @@
+# swww configuration
+# Default transitions
+transition-step = 60
+transition-fps = 60
+transition-type = "simple"
+transition-angle = 30
+transition-pos = "center"
+transition-bezier = "0.4,0.4,0.0,1.0"
+transition-duration = 5
+
+# Fill mode for images
+fill-color = "000000"
+filter = "Lanczos3"

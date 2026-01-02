@@ -1,0 +1,38 @@
+
+{
+    "layer": "top",
+    "position": "top",
+    "height": 31,
+    "spacing": 4,
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "reload_style_on_change": true,
+    "modules-left": [
+        "clock"
+    ],
+    "modules-center": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "battery",
+        "mpris",
+        "tray"
+    ],
+    "tray": {
+        "icon-size": 18,
+        "spacing": 8
+    },
+    "include": [
+        "modules/clock.json",
+        "modules/mpris.json",
+        "modules/battery.json",
+        "modules/network.json",
+        "modules/pulseaudio.json",
+        "modules/window.json",
+        "modules/workspace.json"
+    ]
+}
