@@ -19,7 +19,7 @@ My first Hyprland rice!  Contributions and suggestions are always welcome!🫸�
 ## 📦 Quick Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/.dotfiles
+git clone https://github.com/Straew/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles/scripts
 chmod +x install.sh
 ./install.sh
