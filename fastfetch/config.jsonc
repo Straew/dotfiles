@@ -1,14 +1,14 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "source": "~/.config/fastfetch/pngs/wp15466207.jpg",
+    "source": "~/.config/fastfetch/pngs/diego.png",
     "height": 18,
     "padding": {
       "top": 1
     }
   },
   "display": {
-    "separator": "  ",
+    "separator": " --> ",
     "color": "separator"
   },
   "modules": [
@@ -18,7 +18,7 @@
     },
     {
       "type": "custom",
-      "format": "\u001b[1;36m│  \u001b[1;35m󰄛\u001b[0m  \u001b[1;37mUM HI LOL\u001b[0m                       \u001b[1;36m│"
+      "format": "\u001b[1;36m│  \u001b[1;35m󰄛\u001b[0m  \u001b[1;37mUM HI LOL 😅✌\u001b[0m                       \u001b[1;36m│"
     },
     {
       "type": "custom",
@@ -38,7 +38,7 @@
     },
     {
       "type": "kernel",
-      "key": "\u001b[1;36m│\u001b[0m  \u001b[1;34m\u001b[0m  Kernel",
+      "key": "\u001b[1;36m│\u001b[0m  󰣇 \u001b[1;34m\u001b[0m  Kernel",
       "format": "{2}",
       "keyColor": "white"
     },
@@ -76,7 +76,7 @@
     {
       "type": "title",
       "key": "\u001b[1;35m│\u001b[0m  \u001b[1;31m\u001b[0m ",
-      "format": "\u001b[1m{6}\u001b[0m@\u001b[1m{8}\u001b[0m",
+      "format": "🍀 \u001b[1m{6}\u001b[0m@\u001b[1m{8}\u001b[0m",
       "keyColor": "white"
     },
     {
@@ -86,7 +86,7 @@
     {
       "type": "cpu",
       "format": "{1} @ {7}",
-      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;36m\u001b[0m  CPU",
+      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;36m\u001b[0m  󰣇 CPU",
       "keyColor": "white"
     },
     {
@@ -98,12 +98,12 @@
     {
       "type": "gpu",
       "format": "{3}",
-      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;35m\u001b[0m  Driver",
+      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;35m\u001b[0m  ⚙ Driver",
       "keyColor": "white"
     },
     {
       "type": "memory",
-      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;35m\u001b[0m  Memory",
+      "key": "\u001b[1;35m│\u001b[0m  \u001b[1;35m\u001b[0m 🌎 Memory",
       "keyColor": "white"
     },
     {

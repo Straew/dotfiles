@@ -1,0 +1,30 @@
+/* === Control Center Styling === */
+
+.control-center {
+    background: @cc-bg;
+    border: 1px solid @noti-border-color;
+    border-radius: 16px;
+    backdrop-filter: blur(30px) saturate(180%);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 2px rgba(197, 192, 255, 0.1);
+    padding: 8px;
+}
+
+.control-center:hover {
+    border-color: rgba(197, 192, 255, 0.4);
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+.control-center-list-placeholder {
+    opacity: 0.5;
+    color: @text-color-disabled;
+}
+
+.control-center .notification-row:focus,
+.control-center .notification-row:hover {
+    opacity: 1;
+    background: transparent;
+}

@@ -10,7 +10,8 @@
 }
 #window {
     background: alpha(@surface_bright, 0.2);
-    color: @shadow;
+    border-radius: 10px;
+    color: @foreground;
     font-weight: bold;
     font-style: italic;
     padding: 4px 16px;
@@ -45,11 +46,15 @@ tooltip label {
 
 /* Inactive workspaces - subtle/transparent */
 #workspaces button {
-    padding: 4px 10px;
-    margin: 0px 2px;
-    border-radius: 6px;
+    padding: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 9px;
     background:  alpha(@surface_dim, 0.5);
     color: @foreground;
+    box-shadow: none;
+    text-shadow: none;
+    animation: gradient_f 20s ease-in infinite;
     transition: all 0.3s ease;
     border: none;
 }
@@ -58,6 +63,11 @@ tooltip label {
 #workspaces button.active {
     background: rgba(255,255,255,0.5);
     color: @on_primary;
+    border-radius: 15px 15px 15px 15px;
+   	padding-left: 8px;
+   	padding-right: 8px;
+   	animation: gradient_f 20s ease-in infinite;
+   	transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
 }
 
 #workspaces button.urgent {
@@ -68,10 +78,17 @@ tooltip label {
 #workspaces button:hover {
     background: alpha(@primary, 0.4);
     color: @foreground;
+    border-radius: 15px;
+ 	padding-left: 2px;
+    padding-right: 2px;
+    animation: gradient_f 20s ease-in infinite;
+    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
 }
 
 #clock,
+#custom-notification,
 #battery,
+#custom-archicon,
 #pulseaudio,
 #network,
 #mpris,
@@ -81,11 +98,22 @@ tooltip label {
     margin: 0px 2px;
     border-radius: 0px;
     background: alpha(@primary, 0.3);
-    background-color: transparent;
-    color: @foreground;
+    background-color: rgba(128,128,128,0.5);
+    color: @foreground ;
+    font-weight: bold;
 }
+
+#custom-notification {
+  color: @foreground;
+  background: rgba(128,128,128, 0.5);
+  border-radius: 9px;
+}
+#custom-archicon{
+    border-radius: 100px;
+}
+
 #clock {
-    background: alpha(@primary, 0.25);
+    background: rgba(128,128,128, 0.5);
     color: @foreground;
     font-weight: bold;
     padding: 0px 10px;
@@ -93,15 +121,16 @@ tooltip label {
 }
 
 #battery {
-    background: alpha(@color2, 0.2);
+    background: rgba(128,128,128, 0.5);
+    border-radius: 100px;
 }
 
 #battery.charging {
-    background: alpha(@color10, 0.3);
+    color: rgba(0, 255, 17, 0.5);
 }
 
 #battery.warning:not(.charging) {
-    background: alpha(@color3, 0.3);
+    background: rgba(128,128,128, 0.5);
     color: @foreground;
 }
 
@@ -118,7 +147,8 @@ tooltip label {
 }
 
 #network {
-    background: alpha(@color4, 0.2);
+    background: rgba(128,128,128, 0.5);
+    border-radius: 100px;
 }
 
 #network.disconnected {
@@ -127,7 +157,8 @@ tooltip label {
 }
 
 #pulseaudio {
-    background: alpha(@color6, 0.2);
+    background: rgba(128,128,128, 0.5);
+    border-radius: 100px;
 }
 
 #pulseaudio.muted {
@@ -135,7 +166,8 @@ tooltip label {
     color: @on_error;
 }
 #mpris {
-    background: alpha(@color5, 0.2);
+    background: rgba(128,128,128, 0.5);
+    border-radius: 100px;
     padding: 4px 14px;
 }
 
@@ -145,6 +177,7 @@ tooltip label {
 }
 #tray {
     background: alpha(@surface, 0.5);
+    border-radius: 100px;
     padding: 4px 8px;
 }
 
@@ -157,10 +190,15 @@ tooltip label {
     background-color: @error;
 }
 
+
 #network:hover,
 #pulseaudio:hover,
 #battery:hover,
 #backlight:hover,
+#custom-archicon:hover,
+#tray:hover,
+#custom-notification:hover,
+#mpris:hover,
 #clock:hover {
-  color: blueviolet;
+  color: rgb(0, 0, 0);
 }

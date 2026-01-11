@@ -1,14 +1,15 @@
 [config.wallpaper]
-# Whether to set the wallpaper or not
+command = "swww"
+arguments = ["$img", "--transition-type", "center", "--transition-fps", "60", "--transition-step", "90", "--transition-duration", "1.5", "--transition-angle", "225" ]
 set = true
 
-# The base command to run for applying the wallpaper, shouldn't have spaces in it.
-command = "swww"
+[templates.waybar]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/colors/colors.css'
 
-# The arguments that will be provided to the command.
-# Keywords like {{ mode }} or anything that works inside of hooks doesn't work here.
-# The last argument will be the image path.
-arguments = ["img", "--transition-type", "center"]
+[templates.swaync]
+input_path = '~/.config/matugen/templates/colors.css'
+output_path = '~/.config/colors/colors.css'
 
 
 [templates.hyprland]
@@ -16,16 +17,23 @@ input_path = '~/.config/matugen/templates/hyprland-colors.conf'
 output_path = '~/.config/hypr/colors.conf'
 post_hook = 'hyprctl reload'
 
-# [templates.kitty]
-# input_path = '~/.config/matugen/templates/kitty-colors.conf'
-# output_path = '~/.config/kitty/colors.conf'
-# post_hook = 'kill -SIGUSR1 $(pgrep kitty)'
+[templates.kitty]
+input_path = '~/.config/matugen/templates/kitty-colors.conf'
+output_path = '~/.config/kitty/colors.conf'
 
 [templates.rofi]
 input_path = '~/.config/matugen/templates/rofi-colors.rasi'
 output_path = '~/.config/rofi/colors.rasi'
 
-[templates.waybar]
-input_path = '~/.config/matugen/templates/colors.css'
-output_path = '~/.config/waybar/colors.css'
-post_hook = 'pkill waybar; waybar & disown' 
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+
+[templates.cava]
+input_path = '~/.config/matugen/templates/cava-colors.ini'
+output_path = '~/.config/cava/themes/matugen'
+post_hook = "pkill -USR2 cava"

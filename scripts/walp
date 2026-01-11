@@ -62,7 +62,7 @@ apply_wallpaper() {
     fi
     
     # Set wallpaper with swww (using your config from swww config.toml)
-    swww img "$img" --transition-type center --transition-fps 60 --transition-step 60 --transition-duration 5
+    swww img "$img" --transition-type center --transition-fps 60 --transition-step 90 --transition-duration 1.5
     
     # Generate colors with matugen
     echo "  → Generating color scheme..."
@@ -73,7 +73,7 @@ apply_wallpaper() {
     
     # Optional: Send notification
     if command -v notify-send &> /dev/null; then
-        notify-send -t 3000 "🎨 Wallpaper Change?!" "$(basename "$img")"
+        notify-send -t 3000 "🎨 Theme Applied" "$(basename "$img")"
     fi
     
     echo "✅ Wallpaper set successfully!"

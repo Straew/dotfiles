@@ -1,0 +1,121 @@
+/* === Notification Styling === */
+
+/* Notification Row */
+.notification-row {
+    outline: none;
+    margin: 8px;
+    padding: 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+    opacity: 1;
+}
+
+/* Individual Notification */
+.notification {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+.notification-content {
+    background: @noti-bg;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid @noti-border-color;
+    margin: 0;
+    backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(197, 192, 255, 0.1);
+}
+
+.notification-content:hover {
+    background: @noti-bg-hover;
+    border-color: @accent-primary;
+    backdrop-filter: blur(25px) saturate(180%) brightness(1.1);
+    box-shadow: 0 6px 20px rgba(197, 192, 255, 0.2),
+                inset 0 1px 1px rgba(197, 192, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Close Button */
+.close-button {
+    background: linear-gradient(135deg, rgba(68, 64, 120, 0.9) 0%, rgba(92, 88, 145, 0.8) 100%);
+    color: @text-color;
+    text-shadow: none;
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-right: 4px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(197, 192, 255, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.close-button:hover {
+    background: @accent-primary;
+    color: #2e2960;
+    box-shadow: 0 4px 12px rgba(197, 192, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* Notification Text */
+.summary {
+    padding-top: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: @text-color;
+}
+
+.time {
+    font-size: 11px;
+    color: @accent-secondary;
+    margin-right: 18px;
+    font-weight: 400;
+}
+
+.body {
+    font-size: 12px;
+    color: @text-color-disabled;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Notification Actions */
+.notification-action {
+    color: @text-color;
+    border: 1px solid @noti-border-color;
+    border-top: none;
+    border-radius: 8px;
+    background: @noti-bg-darker;
+    backdrop-filter: blur(15px);
+    padding: 8px 12px;
+    margin-top: 4px;
+}
+
+.notification-default-action:hover,
+.notification-action:hover {
+    color: @accent-primary;
+    background: @noti-bg-hover;
+    border-color: @accent-primary;
+    backdrop-filter: blur(20px) brightness(1.1);
+}
+
+/* Floating Notifications */
+.floating-notifications {
+    background: transparent;
+}
+
+/* Urgency Levels */
+.notification.low {
+    border-left: 3px solid @accent-tertiary;
+}
+
+.notification.normal {
+    border-left: 3px solid @accent-primary;
+}
+
+.notification.critical {
+    border-left: 3px solid @accent-secondary;
+}

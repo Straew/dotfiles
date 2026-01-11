@@ -1,0 +1,70 @@
+/* === Title Widget === */
+
+.widget-title {
+    color: @text-color;
+    background: @noti-bg-darker;
+    padding: 10px 14px;
+    margin: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.widget-title > button {
+    font-size: 13px;
+    color: @text-color;
+    text-shadow: none;
+    background: rgba(68, 64, 120, 0.6);
+    box-shadow: none;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    padding: 6px 12px;
+    border: 1px solid rgba(197, 192, 255, 0.2);
+}
+
+.widget-title > button:hover {
+    background: @accent-primary;
+    color: #2e2960;
+    border-color: @accent-primary;
+    box-shadow: 0 2px 8px rgba(197, 192, 255, 0.3);
+}
+
+/* Label Widget */
+.widget-label {
+    margin: 8px;
+}
+
+.widget-label > label {
+    font-size: 13px;
+    font-weight: 600;
+    color: @text-color;
+}
+
+/* Menu Bar */
+.widget-menubar > box > .menu-button-bar > button {
+    border: none;
+    background: transparent;
+    color: @text-color;
+    padding: 6px 10px;
+}
+
+.widget-menubar > box > .menu-button-bar > button:hover {
+    background: @noti-bg-hover;
+    border-radius: 8px;
+    color: @accent-primary;
+}
+
+.topbar-buttons > button {
+    border: none;
+    background: transparent;
+    color: @text-color;
+    padding: 6px;
+}
+
+.topbar-buttons > button:hover {
+    background: @noti-bg-hover;
+    border-radius: 8px;
+    color: @accent-primary;
+}

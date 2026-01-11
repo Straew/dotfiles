@@ -1,0 +1,163 @@
+#!/bin/bash
+# SALP - Select And Load Wallpaper
+# Standalone rofi wallpaper selector
+# Save as ~/.local/bin/salp
+
+WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+CACHE_DIR="$HOME/.cache/wallpaper-thumbnails"
+CURRENT_WALL_LINK="$HOME/.cache/current_wallpaper"
+LOCK_FILE="/tmp/salp.lock"
+THUMBNAIL_SIZE=300
+
+# Colors for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Prevent multiple instances
+if [ -f "$LOCK_FILE" ]; then
+    echo -e "${YELLOW}⏳ Wallpaper change already in progress...${NC}"
+    exit 0
+fi
+touch "$LOCK_FILE"
+
+# Cleanup on exit
+cleanup() {
+    rm -f "$LOCK_FILE"
+}
+trap cleanup EXIT
+
+# Create directories
+mkdir -p "$WALLPAPER_DIR"
+mkdir -p "$CACHE_DIR"
+
+# Generate thumbnail
+generate_thumbnail() {
+    local image="$1"
+    local thumb="$CACHE_DIR/$(basename "$image").thumb.jpg"
+    
+    if [ ! -f "$thumb" ] || [ "$image" -nt "$thumb" ]; then
+        convert "$image" -resize ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}^ \
+            -gravity center -extent ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE} \
+            "$thumb" 2>/dev/null
+    fi
+    
+    echo "$thumb"
+}
+
+# Get wallpapers with thumbnails for rofi
+get_wallpapers_with_preview() {
+    while IFS= read -r wallpaper; do
+        local name=$(basename "$wallpaper")
+        local thumb=$(generate_thumbnail "$wallpaper")
+        # Format for rofi: name, icon, hidden info (full path)
+        echo -en "$name\x00icon\x1f$thumb\x1finfo\x1f$wallpaper\n"
+    done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | sort)
+}
+
+# Get wallpapers without thumbnails (fallback)
+get_wallpapers_simple() {
+    find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | sort
+}
+
+# Apply wallpaper
+apply_wallpaper() {
+    local wallpaper="$1"
+    
+    # Check if file exists
+    if [ ! -f "$wallpaper" ]; then
+        echo -e "${RED}❌ Error: Wallpaper not found: $wallpaper${NC}"
+        notify-send "❌ Error" "Wallpaper not found!" -t 3000
+        exit 1
+    fi
+    
+    echo -e "${GREEN}🎨 Setting wallpaper: $(basename "$wallpaper")${NC}"
+    
+    # Create/update symlink for hyprlock BEFORE setting wallpaper
+    ln -sf "$wallpaper" "$CURRENT_WALL_LINK"
+    
+    # Start swww daemon if not running
+    if ! pgrep -x swww-daemon > /dev/null; then
+        echo "  → Starting swww daemon..."
+        swww-daemon &
+        sleep 1
+    fi
+    
+    # Set wallpaper
+    swww img "$wallpaper" \
+        --transition-type center \
+        --transition-fps 60 \
+        --transition-step 90 \
+        --transition-duration 1.5
+    
+    # Generate colors with matugen
+    echo "  → Generating color scheme..."
+    if command -v matugen &> /dev/null; then
+        matugen image "$wallpaper"
+    else
+        echo -e "${YELLOW}  ⚠ Warning: matugen not found, skipping color generation${NC}"
+    fi
+    
+    # Wait for files to be written
+    sleep 0.3
+    
+    # Send notification
+    notify-send "🎨 Wallpaper Applied" "$(basename "$wallpaper")" -t 3000
+    
+    echo -e "${GREEN}✅ Wallpaper set successfully!${NC}"
+}
+
+# Main function
+main() {
+    # Check if wallpaper directory has images
+    local count=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | wc -l)
+    
+    if [ "$count" -eq 0 ]; then
+        echo -e "${RED}❌ No wallpapers found in $WALLPAPER_DIR${NC}"
+        notify-send "❌ Error" "No wallpapers found in $WALLPAPER_DIR" -t 5000
+        exit 1
+    fi
+    
+    echo "📁 Found $count wallpapers"
+    
+    # Show rofi menu
+    if command -v convert &> /dev/null; then
+        # With image previews
+        echo "  → Loading with thumbnails..."
+        selected=$(get_wallpapers_with_preview | \
+            rofi -dmenu -i -p "🖼️  Select Wallpaper ($count total)" \
+                -show-icons \
+                -theme-str 'window {width: 800px;} listview {lines: 8;}' \
+                -format 'i' -selected-row 0)
+        
+        # Get the full path from the selected index
+        if [ -n "$selected" ]; then
+            wallpapers=($(get_wallpapers_simple))
+            wallpaper="${wallpapers[$selected]}"
+        fi
+    else
+        # Without thumbnails (simple list)
+        echo "  → Loading without thumbnails (install imagemagick for previews)"
+        wallpaper=$(get_wallpapers_simple | \
+            sed "s|$WALLPAPER_DIR/||" | \
+            rofi -dmenu -i -p "🖼️  Select Wallpaper ($count total)" \
+                -theme-str 'window {width: 600px;} listview {lines: 10;}')
+        
+        # Get full path
+        if [ -n "$wallpaper" ]; then
+            wallpaper="$WALLPAPER_DIR/$wallpaper"
+        fi
+    fi
+    
+    # Exit if nothing selected (user pressed ESC)
+    if [ -z "$wallpaper" ]; then
+        echo "❌ No wallpaper selected"
+        exit 0
+    fi
+    
+    # Apply the selected wallpaper
+    apply_wallpaper "$wallpaper"
+}
+
+main "$@"

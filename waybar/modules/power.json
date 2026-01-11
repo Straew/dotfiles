@@ -1,0 +1,8 @@
+
+{
+    "custom/archicon":{
+        "format": "   ",
+        "on-click": "~/.local/bin/wlogout.sh",
+        "tooltip": true
+    }
+}

@@ -9,7 +9,9 @@
     "gtk-layer-shell": true,
     "reload_style_on_change": true,
     "modules-left": [
-        "clock"
+        "custom/archicon",
+        "clock",
+        "custom/notification"
     ],
     "modules-center": [
         "hyprland/workspaces",
@@ -28,6 +30,8 @@
     },
     "include": [
         "modules/clock.json",
+        "modules/power.json",
+        "modules/notification.json",
         "modules/mpris.json",
         "modules/battery.json",
         "modules/network.json",

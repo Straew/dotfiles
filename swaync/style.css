@@ -1,0 +1,10 @@
+/* Main SwayNC Style - Imports all components */
+@import url("file:///~/.config/waybar/colors.css");
+@import url("styles/base.css");
+@import url("styles/notification.css");
+@import url("styles/control-center.css");
+@import url("styles/widgets/title.css");
+@import url("styles/widgets/dnd.css");
+@import url("styles/widgets/mpris.css");
+@import url("styles/widgets/buttons-grid.css");
+@import url("styles/animations.css");
