@@ -1,13 +1,13 @@
 #!/bin/bash
 # SALP - Select And Load Wallpaper
-# Standalone rofi wallpaper selector
+# Standalone rofi wallpaper selector with video support
 # Save as ~/.local/bin/salp
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
 CACHE_DIR="$HOME/.cache/wallpaper-thumbnails"
 CURRENT_WALL_LINK="$HOME/.cache/current_wallpaper"
 LOCK_FILE="/tmp/salp.lock"
-THUMBNAIL_SIZE=300
+THUMBNAIL_SIZE=200
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -32,50 +32,187 @@ trap cleanup EXIT
 mkdir -p "$WALLPAPER_DIR"
 mkdir -p "$CACHE_DIR"
 
+# Clean up orphaned thumbnails (thumbnails without source files)
+clean_orphaned_thumbnails() {
+    echo "  → Cleaning old thumbnails..."
+    local cleaned=0
+    
+    for thumb in "$CACHE_DIR"/*.thumb.png "$CACHE_DIR"/*.thumb.jpg; do
+        [ -f "$thumb" ] || continue
+        
+        # Extract original filename from thumbnail
+        local thumb_base=$(basename "$thumb")
+        # Remove .thumb.png or .thumb.jpg extension
+        local original_name="${thumb_base%.thumb.*}"
+        
+        # Check if original file exists in wallpaper directory
+        local found=0
+        while IFS= read -r wallpaper; do
+            if [[ "$(basename "$wallpaper")" == "$original_name" ]]; then
+                found=1
+                break
+            fi
+        done < <(find "$WALLPAPER_DIR" -type f)
+        
+        # Remove orphaned thumbnail
+        if [ $found -eq 0 ]; then
+            rm -f "$thumb"
+            ((cleaned++))
+        fi
+    done
+    
+    if [ $cleaned -gt 0 ]; then
+        echo "  → Removed $cleaned orphaned thumbnails"
+    fi
+}
+
+# Check if file is a video
+is_video() {
+    local file="$1"
+    case "${file,,}" in
+        *.mp4|*.webm|*.mkv|*.avi|*.mov)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 # Generate thumbnail
 generate_thumbnail() {
     local image="$1"
-    local thumb="$CACHE_DIR/$(basename "$image").thumb.jpg"
+    local thumb="$CACHE_DIR/$(basename "$image").thumb.png"
     
-    if [ ! -f "$thumb" ] || [ "$image" -nt "$thumb" ]; then
-        convert "$image" -resize ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}^ \
-            -gravity center -extent ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE} \
-            "$thumb" 2>/dev/null
+    # Skip if thumbnail exists and is valid
+    if [ -f "$thumb" ] && [ -s "$thumb" ] && [ "$thumb" -nt "$image" ]; then
+        echo "$thumb"
+        return 0
     fi
     
-    echo "$thumb"
+    # Remove old/corrupted thumbnail
+    rm -f "$thumb" 2>/dev/null
+    
+    if is_video "$image"; then
+        # Generate thumbnail from video using ffmpeg
+        ffmpeg -i "$image" -ss 00:00:01.000 -vframes 1 \
+            -vf "scale=${THUMBNAIL_SIZE}:${THUMBNAIL_SIZE}:force_original_aspect_ratio=increase,crop=${THUMBNAIL_SIZE}:${THUMBNAIL_SIZE}" \
+            "$thumb" 2>/dev/null
+        
+        # Check if ffmpeg succeeded
+        if [ ! -s "$thumb" ]; then
+            # Fallback: try different timestamp
+            ffmpeg -i "$image" -ss 00:00:00.001 -vframes 1 \
+                -vf "scale=${THUMBNAIL_SIZE}:${THUMBNAIL_SIZE}:force_original_aspect_ratio=increase,crop=${THUMBNAIL_SIZE}:${THUMBNAIL_SIZE}" \
+                "$thumb" 2>/dev/null
+        fi
+    else
+        # Generate thumbnail from image using imagemagick
+        convert "$image" -auto-orient -resize ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}^ \
+            -gravity center -extent ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE} \
+            "$thumb" 2>/dev/null
+        
+        # Check if convert succeeded
+        if [ ! -s "$thumb" ]; then
+            # Fallback: try without cropping
+            convert "$image" -auto-orient -resize ${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE} \
+                "$thumb" 2>/dev/null
+        fi
+    fi
+    
+    # Final check - if thumbnail generation failed, use the original image
+    if [ ! -s "$thumb" ]; then
+        echo "$image"
+    else
+        echo "$thumb"
+    fi
 }
 
 # Get wallpapers with thumbnails for rofi
 get_wallpapers_with_preview() {
     while IFS= read -r wallpaper; do
-        local name=$(basename "$wallpaper")
-        local thumb=$(generate_thumbnail "$wallpaper")
-        # Format for rofi: name, icon, hidden info (full path)
-        echo -en "$name\x00icon\x1f$thumb\x1finfo\x1f$wallpaper\n"
-    done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | sort)
+        local thumb="$CACHE_DIR/$(basename "$wallpaper").thumb.png"
+        
+        # Use cached thumbnail if it exists, otherwise use original
+        if [ -f "$thumb" ] && [ -s "$thumb" ]; then
+            echo -en "\x00icon\x1f$thumb\n"
+        else
+            echo -en "\x00icon\x1f$wallpaper\n"
+        fi
+    done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" \) | sort)
 }
 
 # Get wallpapers without thumbnails (fallback)
 get_wallpapers_simple() {
-    find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | sort
+    find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" \) | sort
 }
 
-# Apply wallpaper
-apply_wallpaper() {
+# Stop any running video wallpaper player
+stop_video_player() {
+    pkill -f "mpvpaper" 2>/dev/null
+    pkill -f "xwinwrap" 2>/dev/null
+}
+
+# Apply video wallpaper
+apply_video_wallpaper() {
     local wallpaper="$1"
     
-    # Check if file exists
-    if [ ! -f "$wallpaper" ]; then
-        echo -e "${RED}❌ Error: Wallpaper not found: $wallpaper${NC}"
-        notify-send "❌ Error" "Wallpaper not found!" -t 3000
-        exit 1
+    echo -e "${GREEN}🎬 Setting video wallpaper: $(basename "$wallpaper")${NC}"
+    
+    # Stop swww if running (conflicts with video players)
+    pkill swww-daemon 2>/dev/null
+    sleep 0.5
+    
+    # Method 1: Try mpvpaper (recommended for Wayland)
+    if command -v mpvpaper &> /dev/null; then
+        echo "  → Using mpvpaper for video wallpaper"
+        # Kill any existing mpvpaper instances
+        pkill -f mpvpaper
+        sleep 0.3
+        
+        # Get all active monitors
+        monitors=$(hyprctl monitors -j | jq -r '.[].name')
+        
+        # Start mpvpaper for each monitor
+        for monitor in $monitors; do
+            mpvpaper -o "no-audio --loop --panscan=1.0" "$monitor" "$wallpaper" &
+        done
+        
+        notify-send "🎬 Video Wallpaper Applied" "$(basename "$wallpaper")" -t 3000
+        return 0
     fi
+    
+    # Method 2: Fallback to converting to GIF
+    echo -e "${YELLOW}  ⚠ mpvpaper not found, converting to GIF (this may take a moment)${NC}"
+    
+    local gif_output="$CACHE_DIR/$(basename "$wallpaper" .mp4).gif"
+    
+    if [ ! -f "$gif_output" ]; then
+        notify-send "🔄 Converting Video" "Converting to GIF, please wait..." -t 3000
+        
+        # Convert first 10 seconds to GIF (adjust duration as needed)
+        ffmpeg -i "$wallpaper" -t 10 -vf "fps=15,scale=1920:-1:flags=lanczos" \
+            -c:v gif "$gif_output" 2>/dev/null
+        
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}❌ Failed to convert video to GIF${NC}"
+            notify-send "❌ Error" "Failed to convert video wallpaper" -t 3000
+            return 1
+        fi
+    fi
+    
+    echo "  → Using converted GIF: $gif_output"
+    apply_image_wallpaper "$gif_output"
+}
+
+# Apply image/gif wallpaper
+apply_image_wallpaper() {
+    local wallpaper="$1"
     
     echo -e "${GREEN}🎨 Setting wallpaper: $(basename "$wallpaper")${NC}"
     
-    # Create/update symlink for hyprlock BEFORE setting wallpaper
-    ln -sf "$wallpaper" "$CURRENT_WALL_LINK"
+    # Stop any video players
+    stop_video_player
     
     # Start swww daemon if not running
     if ! pgrep -x swww-daemon > /dev/null; then
@@ -104,14 +241,43 @@ apply_wallpaper() {
     
     # Send notification
     notify-send "🎨 Wallpaper Applied" "$(basename "$wallpaper")" -t 3000
+}
+
+# Apply wallpaper (dispatcher)
+apply_wallpaper() {
+    local wallpaper="$1"
+    
+    # Check if file exists
+    if [ ! -f "$wallpaper" ]; then
+        echo -e "${RED}❌ Error: Wallpaper not found: $wallpaper${NC}"
+        notify-send "❌ Error" "Wallpaper not found!" -t 3000
+        exit 1
+    fi
+    
+    # Create/update symlink
+    ln -sf "$wallpaper" "$CURRENT_WALL_LINK"
+    
+    # Apply based on file type
+    if is_video "$wallpaper"; then
+        apply_video_wallpaper "$wallpaper"
+    else
+        apply_image_wallpaper "$wallpaper"
+    fi
     
     echo -e "${GREEN}✅ Wallpaper set successfully!${NC}"
 }
 
 # Main function
 main() {
+    # Check dependencies
+    if ! command -v convert &> /dev/null; then
+        echo -e "${RED}❌ Error: ImageMagick is required for thumbnails${NC}"
+        notify-send "❌ Missing Dependency" "Install ImageMagick:\nsudo pacman -S imagemagick" -t 5000
+        exit 1
+    fi
+    
     # Check if wallpaper directory has images
-    local count=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" \) | wc -l)
+    local count=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" \) | wc -l)
     
     if [ "$count" -eq 0 ]; then
         echo -e "${RED}❌ No wallpapers found in $WALLPAPER_DIR${NC}"
@@ -121,33 +287,58 @@ main() {
     
     echo "📁 Found $count wallpapers"
     
-    # Show rofi menu
-    if command -v convert &> /dev/null; then
-        # With image previews
-        echo "  → Loading with thumbnails..."
-        selected=$(get_wallpapers_with_preview | \
-            rofi -dmenu -i -p "🖼️  Select Wallpaper ($count total)" \
-                -show-icons \
-                -theme-str 'window {width: 800px;} listview {lines: 8;}' \
-                -format 'i' -selected-row 0)
-        
-        # Get the full path from the selected index
-        if [ -n "$selected" ]; then
-            wallpapers=($(get_wallpapers_simple))
-            wallpaper="${wallpapers[$selected]}"
+    # Clean orphaned thumbnails first (but only if cache is getting large)
+    local cache_count=$(find "$CACHE_DIR" -name "*.thumb.*" 2>/dev/null | wc -l)
+    if [ $cache_count -gt $((count + 10)) ]; then
+        clean_orphaned_thumbnails
+    fi
+    
+    # Check how many thumbnails need to be generated
+    local missing=0
+    while IFS= read -r wallpaper; do
+        local thumb="$CACHE_DIR/$(basename "$wallpaper").thumb.png"
+        if [ ! -f "$thumb" ] || [ ! -s "$thumb" ]; then
+            ((missing++))
         fi
+    done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" \))
+    
+    # Generate missing thumbnails if needed
+    if [ $missing -gt 0 ]; then
+        echo "  → Generating $missing thumbnails..."
+        while IFS= read -r wallpaper; do
+            generate_thumbnail "$wallpaper" > /dev/null 2>&1 &
+        done < <(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" -o -iname "*.webp" -o -iname "*.gif" -o -iname "*.mp4" -o -iname "*.webm" -o -iname "*.mkv" \))
+        wait
+    fi
+    
+    echo "  → Loading grid view..."
+    
+    # Show rofi menu with grid layout
+    selected=$(get_wallpapers_with_preview | \
+        rofi -dmenu -i \
+            -show-icons \
+            -theme-str 'window {width: 1000px; height: 600px;} 
+                        listview {columns: 5; lines: 4; spacing: 10px; padding: 10px;} 
+                        element {padding: 5px; border-radius: 8px;} 
+                        element-icon {size: 180px; border-radius: 8px;}
+                        mainbox {padding: 20px;}
+                        inputbar {enabled: true; padding: 10px; margin: 0px 0px 20px 0px;}' \
+            -format 'i' \
+            -p "Search")
+    
+    # Exit if nothing selected (user pressed ESC or closed)
+    if [ -z "$selected" ] || [ "$selected" = "-1" ]; then
+        echo "❌ No wallpaper selected"
+        exit 0
+    fi
+    
+    # Get the full path from the selected index
+    if [ -n "$selected" ] && [ "$selected" != "-1" ]; then
+        wallpapers=($(get_wallpapers_simple))
+        wallpaper="${wallpapers[$selected]}"
     else
-        # Without thumbnails (simple list)
-        echo "  → Loading without thumbnails (install imagemagick for previews)"
-        wallpaper=$(get_wallpapers_simple | \
-            sed "s|$WALLPAPER_DIR/||" | \
-            rofi -dmenu -i -p "🖼️  Select Wallpaper ($count total)" \
-                -theme-str 'window {width: 600px;} listview {lines: 10;}')
-        
-        # Get full path
-        if [ -n "$wallpaper" ]; then
-            wallpaper="$WALLPAPER_DIR/$wallpaper"
-        fi
+        echo "❌ No wallpaper selected"
+        exit 0
     fi
     
     # Exit if nothing selected (user pressed ESC)
