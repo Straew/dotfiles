@@ -1,4 +1,5 @@
 /* Main SwayNC Style - Imports all components */
+@import "pywal-colors.css";
 @import url("file:///~/.config/waybar/colors.css");
 @import url("styles/base.css");
 @import url("styles/notification.css");
@@ -6,5 +7,6 @@
 @import url("styles/widgets/title.css");
 @import url("styles/widgets/dnd.css");
 @import url("styles/widgets/mpris.css");
-@import url("styles/widgets/buttons-grid.css");
+@import url("styles/widgets/widgets.css");
+@import url("styles/widgets/buttons.css");
 @import url("styles/animations.css");

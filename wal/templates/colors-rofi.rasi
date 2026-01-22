@@ -1,0 +1,97 @@
+cat > ~/.config/rofi/pywal-colors.rasi.template << 'EOF'
+* {
+    /* Primary colors - using pywal color4 (blue/accent) */
+    primary: @COLOR4@;
+    primary-fixed: @COLOR4@;
+    primary-fixed-dim: @COLOR4@CC;
+    on-primary: @BG@;
+    on-primary-fixed: @BG@DD;
+    on-primary-fixed-variant: @COLOR0@;
+    primary-container: @COLOR0@;
+    on-primary-container: @COLOR4@;
+    
+    /* Secondary colors - using pywal color5 (magenta) */
+    secondary: @COLOR5@;
+    secondary-fixed: @COLOR5@;
+    secondary-fixed-dim: @COLOR5@CC;
+    on-secondary: @BG@;
+    on-secondary-fixed: @BG@DD;
+    on-secondary-fixed-variant: @COLOR0@;
+    secondary-container: @COLOR0@;
+    on-secondary-container: @COLOR5@;
+    
+    /* Tertiary colors - using pywal color6 (cyan) */
+    tertiary: @COLOR6@;
+    tertiary-fixed: @COLOR6@;
+    tertiary-fixed-dim: @COLOR6@CC;
+    on-tertiary: @BG@;
+    on-tertiary-fixed: @BG@DD;
+    on-tertiary-fixed-variant: @COLOR0@;
+    tertiary-container: @COLOR0@;
+    on-tertiary-container: @COLOR6@;
+    
+    /* Error colors - using pywal color1 (red) */
+    error: @COLOR1@;
+    on-error: @BG@;
+    error-container: @COLOR1@DD;
+    on-error-container: @FG@;
+    
+    /* Surface colors - using pywal background variants */
+    surface: @BG@;
+    on-surface: @FG@;
+    on-surface-variant: @FG@CC;
+    surface-dim: @BG@;
+    surface-bright: @COLOR0@;
+    surface-container-lowest: @BG@DD;
+    surface-container-low: @BG@EE;
+    surface-container: @COLOR0@DD;
+    surface-container-high: @COLOR0@;
+    surface-container-highest: @COLOR8@;
+    
+    /* Outline colors */
+    outline: @COLOR8@;
+    outline-variant: @COLOR0@;
+    
+    /* Other colors */
+    shadow: #000000;
+    scrim: #000000;
+    inverse-surface: @FG@;
+    inverse-on-surface: @BG@;
+    inverse-primary: @COLOR4@;
+    
+    /* Base colors - with transparency */
+    background: @BG@4D;
+    background-alt: @COLOR0@E6;
+    foreground: @FG@;
+    
+    /* Rofi-specific colors */
+    selected: @COLOR4@;
+    active: @COLOR2@;
+    urgent: @COLOR1@66;
+    urgent-selected: @COLOR1@77;
+    
+    /* Transparent variants for UI elements */
+    selected40: @COLOR4@40;
+    selected20: @COLOR4@20;
+    foreground80: @FG@80;
+    foreground60: @FG@60;
+    
+    /* Terminal colors - from pywal */
+    color0: @COLOR0@;
+    color1: @COLOR1@;
+    color2: @COLOR2@;
+    color3: @COLOR3@;
+    color4: @COLOR4@;
+    color5: @COLOR5@;
+    color6: @COLOR6@;
+    color7: @COLOR7@;
+    color8: @COLOR8@;
+    color9: @COLOR9@;
+    color10: @COLOR10@;
+    color11: @COLOR11@;
+    color12: @COLOR12@;
+    color13: @COLOR13@;
+    color14: @COLOR14@;
+    color15: @COLOR15@;
+}
+EOF

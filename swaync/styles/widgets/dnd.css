@@ -1,5 +1,4 @@
-/* === Do Not Disturb Widget === */
-
+/* === DND Widget === */
 .widget-dnd {
     background: @noti-bg-darker;
     padding: 10px 14px;

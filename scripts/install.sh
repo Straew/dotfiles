@@ -112,7 +112,7 @@ backup_configs() {
     mkdir -p "$BACKUP_DIR"
     
     local backed_up=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch matugen swaync wlogout colors MangoHud swww)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/$dir ]; then
@@ -134,45 +134,50 @@ backup_configs() {
     fi
 }
 
-# Install dependencies
-install_dependencies() {
-    progress "Installing dependencies..."
+# Install programs
+install_programs() {
+    progress "Installing programs..."
     echo ""
     
-    # Core packages
+    # Core programs
     local CORE_PKGS=(
-        # Window Manager & Display
+        # Window Manager & Compositor
         hyprland
-        hyprpaper
         hyprlock
-        hypridle
         xdg-desktop-portal-hyprland
         
-        # Wayland essentials
+        # Wayland
         wayland
-        wl-clipboard
         
-        # Bar & Notifications
+        # Status Bar & Notifications
         waybar
         swaync
         
         # Terminal & Shell
         kitty
+        zsh
         
-        # Launchers & Menus
+        # Application Launcher & Menus
         rofi-wayland
         wlogout
         
-        # Wallpaper & Theming
+        # Wallpaper Manager & Color Scheme Generator
         swww
-        matugen
+        python-pywal
         
-        # Screenshots & Screen recording
+        # Color Picker
+        hyprpicker
+        
+        # Screenshots & Screen Recording
         grim
         slurp
         swappy
         
-        # Audio
+        # Media & Thumbnails
+        ffmpeg
+        mpv
+        
+        # Audio Control
         pipewire
         wireplumber
         pavucontrol
@@ -188,7 +193,7 @@ install_dependencies() {
         noto-fonts
         noto-fonts-emoji
         
-        # System utilities
+        # System Utilities
         polkit-kde-agent
         networkmanager
         network-manager-applet
@@ -197,13 +202,23 @@ install_dependencies() {
         blueman
         brightnessctl
         
-        # Additional tools
+        # Python & Image Processing
+        python
+        python-pip
+        python-pillow
         imagemagick
+        
+        # System Tools
         jq
         fastfetch
     )
     
-    # Optional packages (don't fail if not found)
+    # AUR programs (requires AUR helper)
+    local AUR_PKGS=(
+        pyprland
+    )
+    
+    # Optional programs (don't fail if not found)
     local OPTIONAL_PKGS=(
         cava
         btop
@@ -214,17 +229,27 @@ install_dependencies() {
         fzf
     )
     
-    echo "Installing core packages..."
+    echo "Installing core programs..."
     $PKG_MANAGER -S --needed --noconfirm "${CORE_PKGS[@]}" 2>&1 | grep -v "warning: " || true
     
     echo ""
-    echo "Installing optional packages..."
+    echo "Installing AUR programs..."
+    for pkg in "${AUR_PKGS[@]}"; do
+        if [[ "$PKG_MANAGER" == "yay" ]] || [[ "$PKG_MANAGER" == "paru" ]]; then
+            $PKG_MANAGER -S --needed --noconfirm "$pkg" 2>/dev/null || warning "Skipped: $pkg"
+        else
+            warning "AUR helper needed for: $pkg"
+        fi
+    done
+    
+    echo ""
+    echo "Installing optional programs..."
     for pkg in "${OPTIONAL_PKGS[@]}"; do
         $PKG_MANAGER -S --needed --noconfirm "$pkg" 2>/dev/null || warning "Skipped: $pkg"
     done
     
     echo ""
-    success "Dependencies installed"
+    success "Programs installed"
 }
 
 # Install configs
@@ -232,13 +257,13 @@ install_configs() {
     progress "Installing configurations..."
     
     # Create necessary directories
-    mkdir -p ~/.config/{hypr,waybar,kitty,rofi,cava,fastfetch,matugen,swaync,wlogout,colors,MangoHud,swww}
+    mkdir -p ~/.config/{hypr,waybar,kitty,rofi,cava,fastfetch,swaync,wlogout,colors,MangoHud,swww,pyprland,wal}
     mkdir -p ~/.local/bin
     mkdir -p ~/Pictures/{Wallpapers,Screenshots}
-    mkdir -p ~/.cache
+    mkdir -p ~/.cache/wal
     
     # Copy configs
-    local dirs=(hypr waybar kitty rofi cava fastfetch matugen swaync wlogout colors MangoHud swww)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
     local installed=0
     
     for dir in "${dirs[@]}"; do
@@ -274,6 +299,7 @@ fix_permissions() {
     # Fix config permissions
     chmod -R 755 ~/.config/hypr 2>/dev/null || true
     chmod -R 755 ~/.config/waybar 2>/dev/null || true
+    chmod -R 755 ~/.config/pyprland 2>/dev/null || true
     
     success "Permissions fixed"
 }
@@ -316,6 +342,15 @@ post_install() {
         echo "  Add wallpapers there to use the theme system"
     else
         success "Found $WALLPAPER_COUNT wallpapers"
+        
+        # Generate initial pywal theme from first wallpaper if pywal is installed
+        if command -v wal &> /dev/null; then
+            progress "Generating initial pywal theme..."
+            FIRST_WALLPAPER=$(find ~/Pictures/Wallpapers -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.jpeg" \) 2>/dev/null | head -n 1)
+            if [ -n "$FIRST_WALLPAPER" ]; then
+                wal -i "$FIRST_WALLPAPER" -n -q 2>/dev/null && success "Generated pywal theme" || true
+            fi
+        fi
     fi
 }
 
@@ -336,7 +371,8 @@ EOF
     echo ""
     echo "1. Logout and login to Hyprland"
     echo "2. Add wallpapers to ~/Pictures/Wallpapers"
-    echo "3. Press Super + W to change wallpaper and generate theme"
+    echo "3. Press Super + W to change wallpaper and generate pywal theme"
+    echo "4. Pyprland features are now available (check your keybinds)"
     echo ""
     
     if [ -n "$BACKUP_DIR" ] && [ -d "$BACKUP_DIR" ]; then
@@ -356,7 +392,7 @@ check_installation() {
     local errors=0
     
     # Check critical binaries
-    local critical_bins=(hyprland waybar kitty rofi swww)
+    local critical_bins=(hyprland waybar kitty rofi swww wal)
     for bin in "${critical_bins[@]}"; do
         if ! command -v "$bin" &> /dev/null; then
             error "Missing: $bin"
@@ -372,6 +408,11 @@ check_installation() {
             ((errors++))
         fi
     done
+    
+    # Check for pyprland (optional but warn if missing)
+    if ! command -v pypr &> /dev/null; then
+        warning "Pyprland not found - some features may not work"
+    fi
     
     if [ $errors -eq 0 ]; then
         success "Installation verified successfully"
@@ -391,12 +432,13 @@ main() {
     detect_package_manager
     
     echo ""
-    echo -e "${YELLOW}This will install dotfiles and all dependencies${NC}"
+    echo -e "${YELLOW}This will install dotfiles and all programs${NC}"
+    echo -e "${CYAN}New features: pywal theming + pyprland${NC}"
     echo ""
     echo "What would you like to do?"
     echo "  1) Full installation (recommended)"
-    echo "  2) Install dependencies only"
-    echo "  3) Install configs only (skip dependencies)"
+    echo "  2) Install programs only"
+    echo "  3) Install configs only (skip programs)"
     echo "  4) Exit"
     echo ""
     read -p "Enter choice [1-4]: " choice
@@ -411,7 +453,7 @@ main() {
             echo ""
             
             install_aur_helper
-            install_dependencies
+            install_programs
             install_configs
             fix_permissions
             enable_services
@@ -422,8 +464,8 @@ main() {
         2)
             echo ""
             install_aur_helper
-            install_dependencies
-            success "Dependencies installed"
+            install_programs
+            success "Programs installed"
             ;;
         3)
             echo ""

@@ -1,4 +1,4 @@
-/* === Base Variables === */
+/* === Color Variables === */
 @define-color cc-bg rgba(19, 19, 24, 0.75);
 @define-color noti-border-color rgba(197, 192, 255, 0.25);
 @define-color noti-bg rgba(32, 31, 37, 0.85);
@@ -12,6 +12,7 @@
 @define-color accent-secondary #ebb8d0;
 @define-color accent-tertiary #c8c4dc;
 
+/* === Global Reset === */
 * {
     all: unset;
     font-family: "JetBrainsMono Nerd Font", monospace;
@@ -33,10 +34,6 @@ window#swaync {
     background: transparent;
 }
 
-.blank-window {
-    background: alpha(black, 0.05);
-}
-
 /* === Scrollbar === */
 scrollbar {
     background: transparent;
@@ -51,4 +48,31 @@ scrollbar slider {
 
 scrollbar slider:hover {
     background: rgba(197, 192, 255, 0.5);
+}
+
+/* === Menu Bar === */
+.widget-menubar > box > .menu-button-bar > button {
+    border: none;
+    background: transparent;
+    color: @text-color;
+    padding: 6px 10px;
+}
+
+.widget-menubar > box > .menu-button-bar > button:hover {
+    background: @noti-bg-hover;
+    border-radius: 8px;
+    color: @accent-primary;
+}
+
+.topbar-buttons > button {
+    border: none;
+    background: transparent;
+    color: @text-color;
+    padding: 6px;
+}
+
+.topbar-buttons > button:hover {
+    background: @noti-bg-hover;
+    border-radius: 8px;
+    color: @accent-primary;
 }

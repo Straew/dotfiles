@@ -49,7 +49,7 @@ show_removal_list() {
     echo -e "${YELLOW}The following will be removed:${NC}"
     echo ""
     
-    local configs=(hypr waybar kitty rofi cava fastfetch matugen swaync wlogout colors MangoHud swww)
+    local configs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
     local found=0
     
     for dir in "${configs[@]}"; do
@@ -61,7 +61,7 @@ show_removal_list() {
     
     # Check scripts
     if [ -d ~/.local/bin ]; then
-        local scripts=($(find ~/.local/bin -type f -name "*wallpaper*" -o -name "*theme*" -o -name "salp" -o -name "lockscreen" 2>/dev/null))
+        local scripts=($(find ~/.local/bin -type f -name "*wallpaper*" -o -name "*theme*" -o -name "salp" -o -name "lockscreen" -o -name "*pywal*" 2>/dev/null))
         if [ ${#scripts[@]} -gt 0 ]; then
             echo "  ✗ Scripts in ~/.local/bin"
             ((found++))
@@ -69,8 +69,8 @@ show_removal_list() {
     fi
     
     # Check cache files
-    if [ -f ~/.cache/current_wallpaper ] || [ -f ~/.config/wallpaper_state ]; then
-        echo "  ✗ Wallpaper cache files"
+    if [ -f ~/.cache/current_wallpaper ] || [ -f ~/.config/wallpaper_state ] || [ -d ~/.cache/wal ]; then
+        echo "  ✗ Wallpaper and pywal cache files"
     fi
     
     echo ""
@@ -88,7 +88,7 @@ backup_before_removal() {
     mkdir -p "$BACKUP_DIR"
     
     local backed_up=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch matugen swaync wlogout colors MangoHud swww)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/"$dir" ]; then
@@ -109,6 +109,11 @@ backup_before_removal() {
         cp ~/.config/wallpaper_state "$BACKUP_DIR/" 2>/dev/null || true
     fi
     
+    # Backup pywal cache
+    if [ -d ~/.cache/wal ]; then
+        cp -r ~/.cache/wal "$BACKUP_DIR/" 2>/dev/null || true
+    fi
+    
     if [ $backed_up -gt 0 ]; then
         success "Backed up $backed_up configurations"
         echo "  Location: $BACKUP_DIR"
@@ -120,7 +125,7 @@ remove_configs() {
     progress "Removing configurations..."
     
     local removed=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch matugen swaync wlogout colors MangoHud swww)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/"$dir" ]; then
@@ -135,7 +140,7 @@ remove_configs() {
     progress "Removing scripts..."
     
     # Remove specific scripts (be careful not to remove everything)
-    local scripts=(change-wallpaper salp lockscreen walp theme-switch)
+    local scripts=(change-wallpaper salp lockscreen walp theme-switch pywal-theme)
     for script in "${scripts[@]}"; do
         if [ -f ~/.local/bin/"$script" ]; then
             rm -f ~/.local/bin/"$script" && success "Removed: $script"
@@ -148,7 +153,8 @@ remove_configs() {
     # Remove cache files
     [ -f ~/.cache/current_wallpaper ] && rm -f ~/.cache/current_wallpaper && success "Removed wallpaper cache"
     [ -f ~/.config/wallpaper_state ] && rm -f ~/.config/wallpaper_state && success "Removed wallpaper state"
-    [ -d ~/.cache/wallpaper-thumbnails ] && rm -rf ~/.cache/wallpaper-thumbnails && success "Removed thumbnails"
+    [ -d ~/.cache/wallpaper-thumbnails ] && rm -rf ~/.cache/wallpaper-thumbnails && success "Removed wallpaper thumbnails"
+    [ -d ~/.cache/wal ] && rm -rf ~/.cache/wal && success "Removed pywal cache"
     
     echo ""
     success "Removed $removed configurations"
@@ -222,6 +228,12 @@ restore_from_backup() {
                 chmod +x ~/.local/bin/* 2>/dev/null
                 success "Restored: scripts"
             }
+        fi
+        
+        # Restore pywal cache if exists
+        if [ -d "$selected_backup/wal" ]; then
+            mkdir -p ~/.cache
+            cp -r "$selected_backup/wal" ~/.cache/ 2>/dev/null && success "Restored: pywal cache"
         fi
         
         echo ""

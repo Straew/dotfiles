@@ -1,0 +1,57 @@
+[pyprland]
+plugins = [
+  "scratchpads",
+  "expose",
+  "magnify",
+  "shift_monitors",
+]
+
+# Scratchpads - Dropdown terminals and floating windows
+[scratchpads.term]
+animation = "fromTop"
+command = "kitty --class scratchpad"
+class = "scratchpad"
+size = "75% 60%"
+max_size = "1920px 100%"
+margin = 50
+
+[scratchpads.volume]
+animation = "fromRight"
+command = "pavucontrol"
+class = "org.pulseaudio.pavucontrol"
+size = "40% 90%"
+unfocus = "hide"
+lazy = true
+
+[scratchpads.music]
+animation = "fromTop"
+command = "spotify"
+class = "Spotify"
+size = "80% 85%"
+lazy = true
+
+[scratchpads.btop]
+animation = "fromTop"
+command = "kitty --class btop -e btop"
+class = "btop"
+size = "80% 85%"
+lazy = true
+
+[scratchpads.calculator]
+animation = "fromTop"
+command = "qalculate-gtk"
+class = "qalculate-gtk"
+size = "30% 40%"
+lazy = true
+
+# Expose - Show all windows
+[expose]
+include_special = false
+
+# Magnify - Zoom into areas
+[magnify]
+factor = 2.0
+
+# Shift monitors - Better workspace movement between monitors
+[shift_monitors]
+# No config needed, just enable it

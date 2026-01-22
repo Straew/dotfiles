@@ -1,6 +1,4 @@
-/* === Notification Styling === */
-
-/* Notification Row */
+/* === Notification Row === */
 .notification-row {
     outline: none;
     margin: 8px;
@@ -12,7 +10,7 @@
     opacity: 1;
 }
 
-/* Individual Notification */
+/* === Individual Notification === */
 .notification {
     background: transparent;
     margin: 0;
@@ -39,7 +37,7 @@
     transform: translateY(-2px);
 }
 
-/* Close Button */
+/* === Close Button === */
 .close-button {
     background: linear-gradient(135deg, rgba(68, 64, 120, 0.9) 0%, rgba(92, 88, 145, 0.8) 100%);
     color: @text-color;
@@ -60,7 +58,7 @@
     transform: scale(1.05);
 }
 
-/* Notification Text */
+/* === Notification Text === */
 .summary {
     padding-top: 4px;
     font-size: 14px;
@@ -82,7 +80,7 @@
     line-height: 1.4;
 }
 
-/* Notification Actions */
+/* === Notification Actions === */
 .notification-action {
     color: @text-color;
     border: 1px solid @noti-border-color;
@@ -100,22 +98,4 @@
     background: @noti-bg-hover;
     border-color: @accent-primary;
     backdrop-filter: blur(20px) brightness(1.1);
-}
-
-/* Floating Notifications */
-.floating-notifications {
-    background: transparent;
-}
-
-/* Urgency Levels */
-.notification.low {
-    border-left: 3px solid @accent-tertiary;
-}
-
-.notification.normal {
-    border-left: 3px solid @accent-primary;
-}
-
-.notification.critical {
-    border-left: 3px solid @accent-secondary;
 }

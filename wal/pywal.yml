@@ -1,0 +1,42 @@
+
+[config.wallpaper]
+command = "swww"
+arguments = ["$img", "--transition-type", "center", "--transition-fps", "60", "--transition-step", "90", "--transition-duration", "1.5", "--transition-angle", "225"]
+set = true
+
+[templates.waybar]
+input_path = '~/.config/wal/templates/colors.css'
+output_path = '~/.config/waybar/colors.css'
+post_hook = 'pkill waybar && waybar &'
+
+[templates.swaync]
+input_path = '~/.config/wal/templates/colors-swaync.css'
+output_path = '~/.config/swaync/pywal-colors.css'
+post_hook = 'swaync-client -rs'
+
+[templates.hyprland]
+input_path = '~/.config/wal/templates/colors-hyprland.conf'
+output_path = '~/.config/hypr/pywal-colors.conf'
+post_hook = 'hyprctl reload'
+
+[templates.kitty]
+input_path = '~/.config/wal/templates/colors-kitty.conf'
+output_path = '~/.config/kitty/pywal-colors.conf'
+post_hook = 'killall -SIGUSR1 kitty'
+
+[templates.rofi]
+input_path = '~/.config/wal/templates/colors-rofi.rasi'
+output_path = '~/.config/rofi/pywal-colors.rasi'
+
+[templates.gtk3]
+input_path = '~/.config/wal/templates/gtk.css'
+output_path = '~/.config/gtk-3.0/colors.css'
+
+[templates.gtk4]
+input_path = '~/.config/wal/templates/gtk.css'
+output_path = '~/.config/gtk-4.0/colors.css'
+
+[templates.cava]
+input_path = '~/.config/wal/templates/cava-colors.ini'
+output_path = '~/.config/cava/themes/pywal'
+post_hook = 'pkill -USR2 cava'

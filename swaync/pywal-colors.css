@@ -1,0 +1,89 @@
+/* Pywal SwayNC Theme */
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+}
+
+.notification-row {
+    outline: none;
+}
+
+.notification {
+    background: #1b0b11dd;
+    border: 2px solid #917B8C;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.notification-content {
+    background: transparent;
+    padding: 5px;
+}
+
+.summary {
+    font-weight: bold;
+    color: #c6c2c3;
+}
+
+.body {
+    color: #c6c2c3;
+}
+
+.control-center {
+    background: #1b0b11dd;
+    border: 2px solid #917B8C;
+    border-radius: 12px;
+}
+
+.control-center-list {
+    background: transparent;
+}
+
+.control-center-list-placeholder {
+    color: #6f5a62;
+}
+
+.notification-group {
+    margin: 5px;
+}
+
+.notification-group-headers {
+    background: #1b0b11;
+    color: #c6c2c3;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.close-button {
+    background: #94252A;
+    color: #1b0b11;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.close-button:hover {
+    background: #94252A;
+}
+
+.widget-title {
+    color: #c6c2c3;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 10px;
+}
+
+.widget-dnd {
+    background: #1b0b11;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.widget-dnd > switch {
+    background: #917B8C;
+}
+
+.widget-dnd > switch:checked {
+    background: #92636A;
+}

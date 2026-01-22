@@ -1,0 +1,9 @@
+# Pywal Cava Colors
+; gradient = 0
+gradient = 1
+gradient_color_1 = '#525D6E'
+gradient_color_2 = '#3B5D92'
+gradient_color_3 = '#6A7688'
+gradient_color_4 = '#7A7D96'
+gradient_color_5 = '#798596'
+gradient_color_6 = '#969FAB'

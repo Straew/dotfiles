@@ -1,6 +1,4 @@
-/* === Animations === */
-
-/* Notification slide in */
+/* === Notification Entry Animation === */
 @keyframes notification-slide-in {
     from {
         opacity: 0;
@@ -16,7 +14,7 @@
     animation: notification-slide-in 0.3s ease-out;
 }
 
-/* Critical notification pulse */
+/* === Critical Notification Pulse === */
 @keyframes critical-pulse {
     0%, 100% {
         box-shadow: 0 4px 16px rgba(235, 184, 208, 0.3);
@@ -26,6 +24,16 @@
     }
 }
 
+/* === Urgency Level Styles === */
+.notification.low {
+    border-left: 3px solid @accent-tertiary;
+}
+
+.notification.normal {
+    border-left: 3px solid @accent-primary;
+}
+
 .notification.critical {
+    border-left: 3px solid @accent-secondary;
     animation: critical-pulse 2s ease-in-out infinite;
 }

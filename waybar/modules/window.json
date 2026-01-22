@@ -2,7 +2,7 @@
     "hyprland/window": {
         "format": "{}",
         "separate-outputs": true,
-        "max-length": 50,
+        "max-length": 25,
         "rewrite": {
             "(.*) — Mozilla Firefox": "🌎 $1",
             "(.*) - Visual Studio Code": "  $1"

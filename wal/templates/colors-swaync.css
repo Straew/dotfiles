@@ -1,0 +1,89 @@
+/* Pywal SwayNC Theme */
+* {{
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+}}
+
+.notification-row {{
+    outline: none;
+}}
+
+.notification {{
+    background: {background}dd;
+    border: 2px solid {color4};
+    border-radius: 12px;
+    padding: 10px;
+    margin: 5px;
+}}
+
+.notification-content {{
+    background: transparent;
+    padding: 5px;
+}}
+
+.summary {{
+    font-weight: bold;
+    color: {foreground};
+}}
+
+.body {{
+    color: {color7};
+}}
+
+.control-center {{
+    background: {background}dd;
+    border: 2px solid {color4};
+    border-radius: 12px;
+}}
+
+.control-center-list {{
+    background: transparent;
+}}
+
+.control-center-list-placeholder {{
+    color: {color8};
+}}
+
+.notification-group {{
+    margin: 5px;
+}}
+
+.notification-group-headers {{
+    background: {color0};
+    color: {foreground};
+    border-radius: 8px;
+    padding: 5px;
+}}
+
+.close-button {{
+    background: {color1};
+    color: {background};
+    border-radius: 50%;
+    padding: 2px;
+}}
+
+.close-button:hover {{
+    background: {color9};
+}}
+
+.widget-title {{
+    color: {foreground};
+    font-weight: bold;
+    font-size: 16px;
+    margin: 10px;
+}}
+
+.widget-dnd {{
+    background: {color0};
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px;
+}}
+
+.widget-dnd > switch {{
+    background: {color4};
+}}
+
+.widget-dnd > switch:checked {{
+    background: {color2};
+}}

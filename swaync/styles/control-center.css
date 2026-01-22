@@ -1,5 +1,4 @@
-/* === Control Center Styling === */
-
+/* === Control Center Container === */
 .control-center {
     background: @cc-bg;
     border: 1px solid @noti-border-color;
@@ -27,4 +26,13 @@
 .control-center .notification-row:hover {
     opacity: 1;
     background: transparent;
+}
+
+/* === Floating Notifications === */
+.floating-notifications {
+    background: transparent;
+}
+
+.blank-window {
+    background: alpha(black, 0.05);
 }

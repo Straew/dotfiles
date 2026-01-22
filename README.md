@@ -1,8 +1,8 @@
 # 🎨 Hyprland Dotfiles
 
-My first Hyprland rice!  Contributions and suggestions are always welcome!🫸🫷
+My first Hyprland rice! Contributions and suggestions are always welcome! 🫸🫷
 
-![Hyprland Rice](2026-01-11_20-08-14.png)
+![Hyprland Rice](rice.png)
 
 ## ✨ Features
 
@@ -12,9 +12,11 @@ My first Hyprland rice!  Contributions and suggestions are always welcome!🫸�
 - **Terminal**: Kitty
 - **Launcher**: Rofi
 - **File Manager**: Thunar
-- **Wallpaper**: SWWW with dynamic color generation (Matugen)
-- **Theme**: Auto-generated from wallpapers using Matugen
+- **Wallpaper**: SWWW with dynamic wallpaper daemon
+- **Theme**: Pywal for automatic color generation from wallpapers
 - **Lock Screen**: Hyprlock with blur
+- **Window Manager Extensions**: Pyprland for additional features
+- **Media**: MPV for video playback with thumbnail support
 
 ## 📦 Quick Installation
 
@@ -26,48 +28,41 @@ chmod +x install.sh
 ```
 
 The installer will:
-- Install all required dependencies
+- Install all required programs (Hyprland, Waybar, Pywal, Pyprland, etc.)
 - Backup your existing configs
-- Copy all configurations
-- Set up scripts and permissions
+- Copy all configurations to `~/.config/`
+- Set up scripts in `~/.local/bin/`
+- Generate initial pywal theme
 
-## 🔧 Manual Dependencies
+## 🔧 Manual Installation
 
 If you prefer manual installation:
 
 ```bash
-# Core
-yay -S hyprland xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
-yay -S qt5-wayland qt6-wayland
+# Core programs
+yay -S hyprland hyprlock xdg-desktop-portal-hyprland wayland waybar swaync kitty zsh rofi-wayland wlogout swww python-pywal hyprpicker grim slurp swappy ffmpeg mpv pipewire wireplumber pavucontrol playerctl thunar thunar-volman gvfs ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji polkit-kde-agent networkmanager network-manager-applet bluez bluez-utils blueman brightnessctl python python-pip python-pillow imagemagick jq fastfetch pyprland
+# Optional programs
+yay -S cava btop eza bat fd ripgrep fzf
+```
 
-# UI Components
-yay -S waybar swaync kitty rofi thunar
-
-# Wallpaper & Theming
-yay -S swww matugen
-
-# Utilities
-yay -S grim slurp swappy playerctl pipewire brightnessctl
-yay -S networkmanager bluez bluez-utils
-
-# Fonts
-yay -S ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji
-
-# Optional
-yay -S mangohud cava btop fastfetch
+Then copy configs manually:
+```bash
+cp -r .config/* ~/.config/
+cp -r scripts/* ~/.local/bin/
+chmod +x ~/.local/bin/*
 ```
 
 ## 🗑️ Uninstallation
 
 ```bash
 cd ~/.dotfiles/scripts
-chmod +x unistall.sh
+chmod +x uninstall.sh
 ./uninstall.sh
 ```
 
 This will:
 - Create a backup before removal
-- Remove all dotfiles
+- Remove all dotfiles configurations
 - Optionally restore from previous backups
 
 ## 🖼️ Post Installation
@@ -79,14 +74,14 @@ Place your wallpapers in:
 ```
 
 ### Generate Initial Theme
-Press `Super + W` to select a wallpaper and generate the color scheme.
+Press `Super + W` to select a wallpaper and generate the pywal color scheme.
 
 ### Scripts
 All scripts are in `~/.local/bin/`:
 - `salp` - Wallpaper selector with previews
-- `walp` - Same as salp but it wont let you choose a wallpaper manually (basically wallpaper rotation)
-- `wlogout.sh` - Its wlogout XD
-- `gamemode` - Performance mode
+- `walp` - Automatic wallpaper rotation (no manual selection)
+- `wlogout.sh` - Logout menu
+- `gamemode` - Performance mode toggle
 
 ## ⌨️ Keybinds
 
@@ -140,83 +135,104 @@ All scripts are in `~/.local/bin/`:
 | `Super + F7` | Brightness down |
 | `Super + F8` | Brightness up |
 
-### Media Controls
-| Keybind | Action |
-|---------|--------|
-| `XF86AudioPlay` | Play/Pause |
-| `XF86AudioNext` | Next track |
-| `XF86AudioPrev` | Previous track |
-
 ## 📁 Directory Structure
 
 ```
 ~/.dotfiles/
 ├── hypr/              # Hyprland configs
-├── cava/
-├── fastfetch/
-├── waybar/            # Waybar configs
+├── cava/              # Audio visualizer
+├── fastfetch/         # System info
+├── waybar/            # Status bar configs
 ├── kitty/             # Kitty terminal
-├── rofi/              # Rofi launcher
+├── rofi/              # App launcher
 ├── swaync/            # Notification center
 ├── wlogout/           # Logout menu
+├── pyprland/          # Pyprland configs
+├── wal/               # Pywal templates
 ├── colors/            # Color schemes
 ├── scripts/           # Utility scripts
 │   ├── gamemode
-│   ├── install.sh
 │   ├── salp
-│   └── uninstall.sh
 │   ├── walp
-│   ├── wlogout.sh
+│   └── wlogout.sh
+├── install.sh         # Installation script
+├── uninstall.sh       # Uninstallation script
 └── README.md
 ```
 
 ## 🎨 Customization
 
 ### Change Colors
-Colors are auto-generated from wallpapers using Matugen. To manually adjust:
+Colors are auto-generated from wallpapers using Pywal. The theme is automatically applied when you change wallpapers with `Super + W`.
+
+To manually generate a theme:
 ```bash
-matugen image /path/to/wallpaper.png
+wal -i /path/to/wallpaper.png
 ```
 
 ### Waybar Modules
-Edit `~/.config/waybar/` to add/remove modules.
+Edit `~/.config/waybar/config` to add/remove modules.
 Modules are split into separate files in `~/.config/waybar/modules/`.
 
 ### SwayNC Theme
-Edit `~/.config/swaync/` for notification styling.
-Separate CSS files in `~/.config/swaync/styles` for modular theming.
+Edit `~/.config/swaync/style.css` for notification styling.
+Pywal colors are automatically applied to notifications.
 
 ## 🐛 Troubleshooting
 
-### Wallpaper not changing on lock screen
+### Wallpaper not changing
+Check if swww daemon is running:
 ```bash
-ls -la ~/.cache/current_wallpaper
+pgrep swww-daemon || swww-daemon &
 ```
-Make sure the symlink points to a valid wallpaper.
+
+### Pywal colors not applying
+Make sure pywal is installed and wallpaper exists:
+```bash
+which wal
+ls ~/Pictures/Wallpapers/
+```
 
 ### Waybar not showing icons
 Install Nerd Fonts:
 ```bash
 yay -S ttf-jetbrains-mono-nerd
+fc-cache -fv
 ```
 
 ### Blur not working
-Check Hyprland version and decoration settings in `~/.config/hypr/hyprland.conf`.
+Check Hyprland version and decoration settings in `~/.config/hypr/modules/settings.conf`:
+```bash
+hyprctl version
+```
+
+### Pyprland not working
+Make sure it's running:
+```bash
+pgrep pypr || pypr &
+```
+Or:
+```bash
+sudo rm -f /run/user/1000/hypr/*/.pyprland.sock
+pypr & disown
+```
 
 ### Installation issues
-If you have issues with the installer, extract the zip, navigate to the directory, and run:
+If the installer fails, try manual installation or check logs:
 ```bash
-chmod +x scripts/install.sh
-./scripts/install.sh
+./install.sh 2>&1 | tee install.log
 ```
 
 ## 📝 Credits
 
 - [Hyprland](https://hyprland.org/)
-- [Claude.ai_&_youtube]✌
+- [Claude.ai & YouTube] ✌
 
 ## 📄 License
 
 Feel free to use and modify these dotfiles for your own setup!
 
 ---
+
+**⭐ If you like this rice, give it a star!**
+**you can give me your suggestions on discord too🥺(mint_icecreamm)**

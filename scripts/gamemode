@@ -4,17 +4,21 @@
 if [ -f /tmp/gamemode_active ]; then
     # Turn OFF performance mode
     hyprctl keyword decoration:blur:enabled true
+    hyprctl keyword decoration:blur:size 7
+    hyprctl keyword decoration:blur:passes 2
     hyprctl keyword decoration:active_opacity 0.8
     hyprctl keyword decoration:inactive_opacity 0.95
     hyprctl keyword animations:enabled true
     rm /tmp/gamemode_active
-    notify-send "🎮 Performance Mode OFF" "Visual effects restored"
+    notify-send "🎮 Game Mode OFF" "Visual effects restored"
 else
     # Turn ON performance mode
-    hyprctl keyword decoration:blur:enabled false
+    hyprctl keyword decoration:blur:false
+    hyprctl keyword decoration:blur:size 10
+    hyprctl keyword decoration:blur:passes 10
     hyprctl keyword decoration:active_opacity 1.0
     hyprctl keyword decoration:inactive_opacity 1.0
     hyprctl keyword animations:enabled false
     touch /tmp/gamemode_active
-    notify-send "🎮 Performance Mode ON" "Visual effects disabled for gaming"
+    notify-send "🎮 Game Mode ON" "Visual effects disabled for gaming"
 fi

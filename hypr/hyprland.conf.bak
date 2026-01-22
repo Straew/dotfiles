@@ -2,7 +2,7 @@
 ##### SOURCE #####
 ###################
 # source = ~/.config/hypr/myColors.conf
-source = ~/.config/hypr/pywal-colors.conf
+source = ~/.config/hypr/colors.conf
 $CONFIGS = ~/.config/hypr/modules/
 source = ~/.config/hypr/modules/bind.conf
 source = ~/.config/hypr/modules/setting.conf
@@ -11,7 +11,7 @@ source = ~/.config/hypr/modules/env.conf
 source = ~/.config/hypr/modules/animations.conf
 source = ~/.config/hypr/modules/windowrule.conf
 ################
-### MONITORS ### 
+### MONITORS ###
 ################
 
 # See https://wiki.hypr.land/Configuring/Monitors/

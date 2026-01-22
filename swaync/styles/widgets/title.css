@@ -1,5 +1,4 @@
-/* === Title Widget === */
-
+/* === Widget Title === */
 .widget-title {
     color: @text-color;
     background: @noti-bg-darker;
@@ -29,42 +28,4 @@
     color: #2e2960;
     border-color: @accent-primary;
     box-shadow: 0 2px 8px rgba(197, 192, 255, 0.3);
-}
-
-/* Label Widget */
-.widget-label {
-    margin: 8px;
-}
-
-.widget-label > label {
-    font-size: 13px;
-    font-weight: 600;
-    color: @text-color;
-}
-
-/* Menu Bar */
-.widget-menubar > box > .menu-button-bar > button {
-    border: none;
-    background: transparent;
-    color: @text-color;
-    padding: 6px 10px;
-}
-
-.widget-menubar > box > .menu-button-bar > button:hover {
-    background: @noti-bg-hover;
-    border-radius: 8px;
-    color: @accent-primary;
-}
-
-.topbar-buttons > button {
-    border: none;
-    background: transparent;
-    color: @text-color;
-    padding: 6px;
-}
-
-.topbar-buttons > button:hover {
-    background: @noti-bg-hover;
-    border-radius: 8px;
-    color: @accent-primary;
 }

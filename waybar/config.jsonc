@@ -14,8 +14,7 @@
         "custom/notification"
     ],
     "modules-center": [
-        "hyprland/workspaces",
-        "hyprland/window"
+        "hyprland/workspaces"
     ],
     "modules-right": [
         "network",
@@ -36,7 +35,6 @@
         "modules/battery.json",
         "modules/network.json",
         "modules/pulseaudio.json",
-        "modules/window.json",
         "modules/workspace.json"
     ]
 }

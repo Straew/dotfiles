@@ -1,6 +1,6 @@
 #!/bin/bash
 # SALP - Select And Load Wallpaper
-# Standalone rofi wallpaper selector with video support
+# Standalone rofi wallpaper selector with video support + Pywal integration
 # Save as ~/.local/bin/salp
 
 WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
@@ -153,6 +153,82 @@ stop_video_player() {
     pkill -f "xwinwrap" 2>/dev/null
 }
 
+# Apply Pywal colors to all configs
+apply_pywal_colors() {
+    local wallpaper="$1"
+    
+    echo "  → Generating Pywal color scheme..."
+    
+    # Generate colors with Pywal
+    if command -v wal &> /dev/null; then
+        wal -i "$wallpaper" -n -q
+        
+        # Wait for Pywal to generate files
+        sleep 0.5
+        
+        # Copy colors to Waybar
+        if [ -f ~/.cache/wal/colors.css ]; then
+            cp ~/.cache/wal/colors.css ~/.config/waybar/pywal-colors.css
+            pkill waybar
+            waybar &
+            echo "    ✓ Waybar themed"
+        fi
+        
+        # Copy colors to Rofi
+        if [ -f ~/.cache/wal/colors-rofi.rasi ]; then
+            cp ~/.cache/wal/colors-rofi.rasi ~/.config/rofi/pywal-colors.rasi
+            echo "    ✓ Rofi themed"
+        fi
+        
+        # Copy colors to SwayNC
+        if [ -f ~/.cache/wal/colors-swaync.css ]; then
+            cp ~/.cache/wal/colors-swaync.css ~/.config/swaync/pywal-colors.css
+            swaync-client -rs 2>/dev/null
+            echo "    ✓ SwayNC themed"
+        fi
+        
+        # Copy colors to Hyprland
+        if [ -f ~/.cache/wal/colors-hyprland.conf ]; then
+            cp ~/.cache/wal/colors-hyprland.conf ~/.config/hypr/pywal-colors.conf
+            hyprctl reload
+            echo "    ✓ Hyprland themed"
+        fi
+        
+        # Copy colors to Kitty
+        if [ -f ~/.cache/wal/colors-kitty.conf ]; then
+            cp ~/.cache/wal/colors-kitty.conf ~/.config/kitty/pywal-colors.conf
+            killall -SIGUSR1 kitty 2>/dev/null
+            echo "    ✓ Kitty themed"
+        fi
+        
+        # Copy colors to GTK3
+        if [ -f ~/.cache/wal/gtk.css ]; then
+            mkdir -p ~/.config/gtk-3.0
+            cp ~/.cache/wal/gtk.css ~/.config/gtk-3.0/colors.css
+            echo "    ✓ GTK3 themed"
+        fi
+        
+        # Copy colors to GTK4
+        if [ -f ~/.cache/wal/gtk.css ]; then
+            mkdir -p ~/.config/gtk-4.0
+            cp ~/.cache/wal/gtk.css ~/.config/gtk-4.0/colors.css
+            echo "    ✓ GTK4 themed"
+        fi
+        
+        # Copy colors to Cava
+        if [ -f ~/.cache/wal/cava-colors.ini ]; then
+            mkdir -p ~/.config/cava/themes
+            cp ~/.cache/wal/cava-colors.ini ~/.config/cava/config
+            pkill -USR2 cava 2>/dev/null
+            echo "    ✓ Cava themed"
+        fi
+        
+        echo -e "${GREEN}  ✓ Pywal colors applied to all configs${NC}"
+    else
+        echo -e "${YELLOW}  ⚠ Warning: Pywal not found, skipping color generation${NC}"
+    fi
+}
+
 # Apply video wallpaper
 apply_video_wallpaper() {
     local wallpaper="$1"
@@ -179,6 +255,16 @@ apply_video_wallpaper() {
         done
         
         notify-send "🎬 Video Wallpaper Applied" "$(basename "$wallpaper")" -t 3000
+        
+        # For videos, extract first frame to generate colors
+        local temp_frame="/tmp/video_frame_$$.jpg"
+        ffmpeg -i "$wallpaper" -ss 00:00:01 -vframes 1 "$temp_frame" 2>/dev/null
+        
+        if [ -f "$temp_frame" ]; then
+            apply_pywal_colors "$temp_frame"
+            rm -f "$temp_frame"
+        fi
+        
         return 0
     fi
     
@@ -228,13 +314,8 @@ apply_image_wallpaper() {
         --transition-step 90 \
         --transition-duration 1.5
     
-    # Generate colors with matugen
-    echo "  → Generating color scheme..."
-    if command -v matugen &> /dev/null; then
-        matugen image "$wallpaper"
-    else
-        echo -e "${YELLOW}  ⚠ Warning: matugen not found, skipping color generation${NC}"
-    fi
+    # Apply Pywal colors
+    apply_pywal_colors "$wallpaper"
     
     # Wait for files to be written
     sleep 0.3
