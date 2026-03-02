@@ -1,0 +1,48 @@
+
+#workspaces {
+    padding: 0 4px;
+    background: transparent;
+}
+
+/* Inactive workspaces - subtle/transparent */
+#workspaces button {
+    padding: 0px;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 9px;
+    background: alpha(@background, 0.5);
+    color: @foreground;
+    box-shadow: none;
+    text-shadow: none;
+    animation: gradient_f 20s ease-in infinite;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+/* Active workspace - primary accent */
+#workspaces button.active {
+    background: alpha(@primary, 0.6);
+    color: @on_primary;
+    border-radius: 15px 15px 15px 15px;
+    padding-left: 8px;
+    padding-right: 8px;
+    animation: gradient_f 20s ease-in infinite;
+    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
+}
+
+/* Urgent workspace */
+#workspaces button.urgent {
+    background: @error;
+    color: @on_error;
+}
+
+/* Hover effect */
+#workspaces button:hover {
+    background: alpha(@primary, 0.4);
+    color: @foreground;
+    border-radius: 15px;
+    padding-left: 2px;
+    padding-right: 2px;
+    animation: gradient_f 20s ease-in infinite;
+    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
+}

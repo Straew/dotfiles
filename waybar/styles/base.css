@@ -1,0 +1,45 @@
+
+/* Global reset */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 0;
+}
+
+/* Window styling */
+#window {
+    background: alpha(@surface_dim, 0.5);
+    border-radius: 10px;
+    color: @foreground;
+    font-weight: bold;
+    font-style: italic;
+    padding: 4px 16px;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+#waybar {
+    background-color: alpha(@background, 0.75);
+    color: alpha(@foreground, 0.5);
+    border-radius: 5px;
+    border: 10px;
+}
+
+/* Tooltips */
+tooltip {
+    background: alpha(@background, 0.9);
+    border: 2px solid @primary;
+    border-radius: 8px;
+    padding: 8px;
+    color: @foreground;
+}
+
+tooltip label {
+    color: @foreground;
+}
+

@@ -17,6 +17,7 @@
         "hyprland/workspaces"
     ],
     "modules-right": [
+        "temperature",
         "network",
         "pulseaudio",
         "battery",
@@ -35,6 +36,7 @@
         "modules/battery.json",
         "modules/network.json",
         "modules/pulseaudio.json",
-        "modules/workspace.json"
+        "modules/workspace.json",
+        "modules/temp.json"
     ]
 }
