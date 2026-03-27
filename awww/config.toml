@@ -1,4 +1,4 @@
-# swww configuration
+# awww configuration
 # Default transitions
 transition-step = 60
 transition-fps = 60

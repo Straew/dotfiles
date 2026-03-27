@@ -112,7 +112,7 @@ backup_configs() {
     mkdir -p "$BACKUP_DIR"
     
     local backed_up=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud awww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/$dir ]; then
@@ -162,7 +162,7 @@ install_programs() {
         wlogout
         
         # Wallpaper Manager & Color Scheme Generator
-        swww
+        awww
         python-pywal
         
         # Color Picker
@@ -257,13 +257,13 @@ install_configs() {
     progress "Installing configurations..."
     
     # Create necessary directories
-    mkdir -p ~/.config/{hypr,waybar,kitty,rofi,cava,fastfetch,swaync,wlogout,colors,MangoHud,swww,pyprland,wal}
+    mkdir -p ~/.config/{hypr,waybar,kitty,rofi,cava,fastfetch,swaync,wlogout,colors,MangoHud,awww,pyprland,wal}
     mkdir -p ~/.local/bin
     mkdir -p ~/Pictures/{Wallpapers,Screenshots}
     mkdir -p ~/.cache/wal
     
     # Copy configs
-    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud awww pyprland wal)
     local installed=0
     
     for dir in "${dirs[@]}"; do
@@ -326,12 +326,12 @@ post_install() {
     # Create wallpaper state file
     touch ~/.config/wallpaper_state
     
-    # Initialize swww
-    if command -v swww &> /dev/null; then
-        swww-daemon &
+    # Initialize awww
+    if command -v awww &> /dev/null; then
+        awww-daemon &
         sleep 1
-        pkill swww-daemon
-        success "Initialized swww"
+        pkill awww-daemon
+        success "Initialized awww"
     fi
     
     # Check for wallpapers
@@ -392,7 +392,7 @@ check_installation() {
     local errors=0
     
     # Check critical binaries
-    local critical_bins=(hyprland waybar kitty rofi swww wal)
+    local critical_bins=(hyprland waybar kitty rofi awww wal)
     for bin in "${critical_bins[@]}"; do
         if ! command -v "$bin" &> /dev/null; then
             error "Missing: $bin"

@@ -235,8 +235,8 @@ apply_video_wallpaper() {
     
     echo -e "${GREEN}🎬 Setting video wallpaper: $(basename "$wallpaper")${NC}"
     
-    # Stop swww if running (conflicts with video players)
-    pkill swww-daemon 2>/dev/null
+    # Stop awww if running (conflicts with video players)
+    pkill awww-daemon 2>/dev/null
     sleep 0.5
     
     # Method 1: Try mpvpaper (recommended for Wayland)
@@ -300,15 +300,15 @@ apply_image_wallpaper() {
     # Stop any video players
     stop_video_player
     
-    # Start swww daemon if not running
-    if ! pgrep -x swww-daemon > /dev/null; then
-        echo "  → Starting swww daemon..."
-        swww-daemon &
+    # Start awww daemon if not running
+    if ! pgrep -x awww-daemon > /dev/null; then
+        echo "  → Starting awww daemon..."
+        awww-daemon &
         sleep 1
     fi
     
     # Set wallpaper
-    swww img "$wallpaper" \
+    awww img "$wallpaper" \
         --transition-type center \
         --transition-fps 60 \
         --transition-step 90 \

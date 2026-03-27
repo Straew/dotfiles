@@ -49,7 +49,7 @@ show_removal_list() {
     echo -e "${YELLOW}The following will be removed:${NC}"
     echo ""
     
-    local configs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
+    local configs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud awww pyprland wal)
     local found=0
     
     for dir in "${configs[@]}"; do
@@ -88,7 +88,7 @@ backup_before_removal() {
     mkdir -p "$BACKUP_DIR"
     
     local backed_up=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud awww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/"$dir" ]; then
@@ -125,7 +125,7 @@ remove_configs() {
     progress "Removing configurations..."
     
     local removed=0
-    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud swww pyprland wal)
+    local dirs=(hypr waybar kitty rofi cava fastfetch swaync wlogout colors MangoHud awww pyprland wal)
     
     for dir in "${dirs[@]}"; do
         if [ -d ~/.config/"$dir" ]; then
