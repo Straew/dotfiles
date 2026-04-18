@@ -1,0 +1,5 @@
+// Color definitions - can be referenced in other modules
+// Note: Niri doesn't support variables natively, this is for organization
+// Focus ring colors
+// active-color "#7fc8ff"
+// inactive-color "#505050"

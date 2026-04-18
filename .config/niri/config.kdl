@@ -1,0 +1,31 @@
+// Niri Main Configuration
+// Modules are included in order - later modules override earlier ones
+
+// Core settings
+include "modules/input.kdl"
+include "modules/output.kdl"
+include "modules/layout.kdl"
+include "modules/animations.kdl"
+include "modules/Focus_Ring.kdl"
+
+// Rules
+include "modules/window-rules.kdl"
+include "modules/layer-rules.kdl"
+
+// Startup
+include "modules/spawn.kdl"
+
+// Keybindings (split by category for easier management)
+include "modules/binds-apps.kdl"
+include "modules/binds-media.kdl"
+include "modules/binds-windows.kdl"
+include "modules/binds-workspaces.kdl"
+include "modules/binds.kdl"  // Main binds that don't fit elsewhere
+
+// Global settings
+hotkey-overlay {
+    skip-at-startup
+}
+
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/from %Y-%m-%d %H-%M-%S.png"

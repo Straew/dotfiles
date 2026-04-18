@@ -1,0 +1,22 @@
+input {
+    keyboard {
+        xkb {
+            // Add your layout here if needed
+            // layout "us,ru"
+            // options "grp:win_space_toggle"
+        }
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    mouse {
+        // Mouse settings here if needed
+    }
+
+    warp-mouse-to-focus
+
+    focus-follows-mouse max-scroll-amount="0%"
+}

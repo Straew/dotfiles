@@ -1,0 +1,80 @@
+// Add this section to your ~/.config/niri/config.kdl
+animations {
+    // Uncomment to turn off all animations (replaces Hyprland's animations:disabled)
+    // off
+
+    // Slow down all animations (values >1 slower, <1 faster)
+    slowdown 1.5
+
+    // ============================================
+    // WORKSPACE SWITCH (vertical movement)
+    // ============================================
+    workspace-switch {
+        // Spring physics (default) - feels natural with touchpad
+        spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
+        
+        // Alternative: Easing animation (fixed duration)
+        // duration-ms 200
+        // curve "ease-out-expo"
+    }
+
+    // ============================================
+    // WINDOW OPENING
+    // ============================================
+    window-open {
+        duration-ms 150
+        curve "ease-out-expo"  // Smooth pop-in effect
+    }
+
+    // ============================================
+    // WINDOW CLOSING
+    // ============================================
+    window-close {
+        duration-ms 150
+        curve "ease-out-quad"  // Slightly faster fade-out
+    }
+
+    // ============================================
+    // HORIZONTAL SCROLLING (moving left/right)
+    // ============================================
+    horizontal-view-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    // ============================================
+    // WINDOW MOVEMENT (rearranging columns/windows)
+    // ============================================
+    window-movement {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    // ============================================
+    // WINDOW RESIZING
+    // ============================================
+    window-resize {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    // ============================================
+    // OVERVIEW MODE (your Super+O bind)
+    // ============================================
+    overview-open-close {
+        spring damping-ratio=1.0 stiffness=800 epsilon=0.0001
+    }
+
+    // ============================================
+    // OTHER UI ANIMATIONS
+    // ============================================
+    config-notification-open-close {
+        spring damping-ratio=0.6 stiffness=1000 epsilon=0.001  // Slight bounce
+    }
+
+    exit-confirmation-open-close {
+        spring damping-ratio=0.6 stiffness=500 epsilon=0.01
+    }
+
+    screenshot-ui-open {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+}

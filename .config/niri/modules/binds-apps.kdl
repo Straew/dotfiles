@@ -1,0 +1,7 @@
+binds {
+    Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    Mod+A hotkey-overlay-title="Run an Application: rofi" { spawn "rofi" "-drun" "-show"; }
+    Super+E { spawn "thunar"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: Lockscreen" { spawn "hyprlock"; }
+    Super+W {spawn "~/.local/bin/salp";}
+}

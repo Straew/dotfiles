@@ -1,0 +1,10 @@
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+    
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    
+
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+}
