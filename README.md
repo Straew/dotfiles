@@ -76,6 +76,30 @@ The installer will ask you:
 
 > **Note:** The installer requires an AUR helper (`yay` or `paru`). If neither is found it will install `yay` automatically.
 
+# Optional packages
+nvim, starship and xdg desktop. Theres problem with niri screenshares so its better to install wlr and gnome desktop portal. Also my current nvim config.
+```bash
+
+sudo pacman -S nvim xdg-desktop-portal-gnome xdg-desktop-portal-wlr 
+
+systemctl --user restart xdg-desktop-portal
+
+# optional for terminal customization
+yay -S starship
+nvim ~/.zshrc
+# paste this: 
+eval "$(starship init zsh)"
+#instead of zsh keep bash, fish or whatever shell youre using
+
+# After doing this js move the folders and youre good to go 
+cd ~/dotfiles
+mv nvim ~/.config/
+mv xdg-desktop-portal ~/.config
+mv starship.toml ~/.config
+```
+
+# Unistallation
+
 ```bash
 # uninstall
 chmod +x uinstall.sh
