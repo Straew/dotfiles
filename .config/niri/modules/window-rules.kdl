@@ -12,3 +12,5 @@ window-rule {
     geometry-corner-radius 25
     clip-to-geometry true
 }
+
+

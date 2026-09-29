@@ -1,8 +1,7 @@
 <div align="center">
 
 # ✨ My Dotfiles
-
-**A repo for both Hyprland and Niri**
+### Whats new? -> lua files for hyprland (old files in there but the sys uses lua), added my wallpapers also the cursor i use.
 
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
 ![Wayland](https://img.shields.io/badge/Wayland-FFB800?style=for-the-badge&logo=wayland&logoColor=black)
@@ -39,7 +38,6 @@ dotfiles/
 │   ├── colors/        # Color exports (shared)
 │   ├── MangoHud/      # FPS overlay (shared)
 │   ├── awww/          # Wallpaper config (Hyprland)
-│   └── pyprland/      # Pyprland scratchpads (Hyprland)
 ├── scripts/           # Shell scripts for both WMs
 ├── install.sh         # Installer
 └── README.md
@@ -62,20 +60,8 @@ The installer copies all **shared** configs and only the configs relevant to you
 # 1. Clone the repo
 git clone https://github.com/Straew/dotfiles.git
 cd dotfiles
-
-# 2. Run the installer
-chmod +x install.sh
-./install.sh
+# 2. replace the files (make sure to have old backups)
 ```
-
-The installer will ask you:
-
-1. **Which compositor** — Hyprland, Niri, or both
-2. **What to install** — full install, packages only, or configs only
-3. **Whether to back up** your existing configs before overwriting
-
-> **Note:** The installer requires an AUR helper (`yay` or `paru`). If neither is found it will install `yay` automatically.
-
 # Optional packages
 nvim, starship and xdg desktop. Theres problem with niri screenshares so its better to install wlr and gnome desktop portal. Also my current nvim config.
 ```bash
@@ -96,14 +82,6 @@ cd ~/dotfiles
 mv nvim ~/.config/
 mv xdg-desktop-portal ~/.config
 mv starship.toml ~/.config
-```
-
-# Unistallation
-
-```bash
-# uninstall
-chmod +x uinstall.sh
-./uninstall.sh 
 ```
 ---
 
@@ -227,22 +205,6 @@ A few things the script can't do for you:
 
 ---
 
-## 💾 Backup & Restore
-
-The installer offers to back up your existing configs before overwriting. Backups are saved to:
-
-```
-~/.config/dotfiles_backup_YYYYMMDD_HHMMSS/
-```
-
-To restore:
-```bash
-cp -r ~/.config/dotfiles_backup_YYYYMMDD_HHMMSS/waybar ~/.config/waybar
-# repeat for any dir you want to restore
-```
-
----
-
 ## 🐛 Troubleshooting
 
 ### Wallpaper not changing
@@ -278,12 +240,6 @@ Or:
 ```
 sudo rm -f /run/user/1000/hypr/*/.pyprland.sock
 pypr & disown
-```
-### Installation issues
-
-If the installer fails, try manual installation or check logs:
-```
-./install.sh 2>&1 | tee install.log
 ```
 
 <div align="center">

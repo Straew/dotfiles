@@ -1,0 +1,24 @@
+-- pywal colors: returns a table, use it with:  local c = require("pywal-colors")
+-- (point your pywal template/script at ~/.config/hypr/pywal-colors.lua)
+
+return {
+    wallpaper = "/home/mint-icecream/Pictures/Wallpapers/wallhaven-yq57rl.jpg",
+    foreground = "rgba(196,195,198,1.0)",
+    background = "rgba(19,16,30,1.0)",
+    color0 = "rgba(19,16,30,1.0)",
+    color1 = "rgba(148,122,163,1.0)",
+    color2 = "rgba(104,137,180,1.0)",
+    color3 = "rgba(104,163,219,1.0)",
+    color4 = "rgba(109,214,235,1.0)",
+    color5 = "rgba(113,206,250,1.0)",
+    color6 = "rgba(160,138,177,1.0)",
+    color7 = "rgba(196,195,198,1.0)",
+    color8 = "rgba(97,93,113,1.0)",
+    color9 = "rgba(148,122,163,1.0)",
+    color10 = "rgba(104,137,180,1.0)",
+    color11 = "rgba(104,163,219,1.0)",
+    color12 = "rgba(109,214,235,1.0)",
+    color13 = "rgba(113,206,250,1.0)",
+    color14 = "rgba(160,138,177,1.0)",
+    color15 = "rgba(196,195,198,1.0)",
+}

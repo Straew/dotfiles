@@ -6,6 +6,7 @@ include "modules/input.kdl"
 include "modules/output.kdl"
 include "modules/layout.kdl"
 include "modules/animations.kdl"
+include "modules/Focus_Ring.kdl"
 
 // Rules
 include "modules/window-rules.kdl"
@@ -40,8 +41,6 @@ environment {
     
     XDG_CURRENT_DESKTOP "niri"
 
+    DISPLAY ":1"
+
 }
-cursor {
-    xcursor-theme "Layan-white-cursors"
-    xcursor-size 24
-}   
